@@ -43,7 +43,7 @@ $questions = $controller->getTestQuestions($newId);
 </div>
 
 
-<div class="container border rounded bg-info">
+<div class="container border rounded bg-info mb-5">
     <div class="row m-3">
         <div class="col-6">
             <div class="form-group" style="display: contents;">
@@ -57,7 +57,8 @@ $questions = $controller->getTestQuestions($newId);
                 <input type="text" class="form-control" id="startTime" name="startTime">
             </div>
             <?php
-                echo "<button class='btn btn-block btn-primary mt-2' onclick='saveTest('".$newId."')'>Ulozit test</button>"
+                echo "<button class='btn btn-block btn-primary mt-2' onclick='saveTest('".$newId."')'>Ulozit test</button>";
+                echo "<button class='btn btn-block btn-warning mt-2' onclick='deleteTest('".$newId."')'>Zmazat test</button>"
             ?>
         </div>
         <div class="col-6">
@@ -80,7 +81,7 @@ $questions = $controller->getTestQuestions($newId);
             <tbody>
             <?php
             foreach($questions as $row) {
-                echo "<tr><th>".$row["id"]."</th><th>".$row["name"]."</th><th>".$row["type"]."</th><th><button class='btn btn-warning' onclick='deleteQuestion('".$row["id"]."')'>Zmazat</button></th></tr>";
+                echo "<tr><th>".$row["id"]."</th><th>".$row["name"]."</th><th>".$row["type"]."</th><th><button class='btn btn-warning' onclick='deleteQuestion(".$row["id"].")'>Zmazat</button></th></tr>";
             }
             ?>
             </tbody>
@@ -175,19 +176,24 @@ $questions = $controller->getTestQuestions($newId);
         height: 300,
     });
 
+    let i = 1;
+
     let layer = new Konva.Layer();
 
     function addPairQuestion() {
-        $('#myModal').modal('hide');
+        $('#myModal2').modal('hide');
         let id = $('#testId').text();
-        let text = $('#questionText').val();
-        let questionName = $('#questionName').val();
+        let text = $('#questionText2').val();
+        let questionName = $('#questionName2').val();
+        let json = stage.toJSON();
+        let myJSON = JSON.stringify(json);
+        console.log(myJSON);
         //let contents = $('#contents').text();
         jQuery.ajax({
             type: "POST",
-            url: 'rest/savePairQuestion.php',
+            url: 'savePairQuestion.php',
             dataType: 'json',
-            data: {testId: id, name: questionName, text: text, content: ''},
+            data: {testId: id, name: questionName, text: text, content: myJSON},
 
             success: function (obj, textstatus) {
                 if( !('error' in obj) ) {
@@ -209,7 +215,7 @@ $questions = $controller->getTestQuestions($newId);
         //let contents = $('#contents').text();
         jQuery.ajax({
             type: "POST",
-            url: 'rest/savePaintQuestion.php',
+            url: 'savePaintQuestion.php',
             dataType: 'json',
             data: {testId: id, name: questionName, text: text, content: ''},
 
@@ -233,7 +239,7 @@ $questions = $controller->getTestQuestions($newId);
         //let contents = $('#contents').text();
         jQuery.ajax({
             type: "POST",
-            url: 'rest/saveTest.php',
+            url: 'saveTest.php',
             dataType: 'json',
             data: {id: id, name: testName, startTime: startTime, startTimeDate: startTimeDate, time: time},
 
@@ -252,9 +258,9 @@ $questions = $controller->getTestQuestions($newId);
     function deleteQuestion(id) {
         jQuery.ajax({
             type: "POST",
-            url: 'rest/deleteQuestion.php',
+            url: 'deleteQuestion.php',
             dataType: 'json',
-            data: {id: id},
+            data: {questionId: id},
 
             success: function (obj, textstatus) {
                 if( !('error' in obj) ) {
@@ -269,8 +275,13 @@ $questions = $controller->getTestQuestions($newId);
     }
 
     function showModal(a) {
+        stage.clear();
         $('#key').val('');
         $('#value').val('');
+        $('#questionText').val();
+        $('#questionName').val();
+        $('#questionText2').val();
+        $('#questionName2').val();
         $('#'+a).modal('show');
     }
 
@@ -279,8 +290,8 @@ $questions = $controller->getTestQuestions($newId);
         let value = $('#value').val();
 
         let rectangleKey = new Konva.Group({
-            x: 25,
-            y: 25,
+            x: i*25,
+            y: i*25,
             width: 130,
             height: 25,
             draggable: true,
@@ -330,6 +341,7 @@ $questions = $controller->getTestQuestions($newId);
         layer.add(rectangleKey);
         layer.add(rectangleValue);
         stage.add(layer);
+        i++;
     }
 
 </script>

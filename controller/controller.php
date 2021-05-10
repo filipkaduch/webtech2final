@@ -33,6 +33,24 @@ class Controller {
         return $this->conn->lastInsertId();
     }
 
+    public function savePairQuestion($testId, $name, $text, $content) {
+        $type = 'pair';
+        $stmt = $this->conn->prepare('INSERT INTO questions (test_id, name, type, text, content) VALUES(:test_id, :name, :type, :text, :content)');
+        $stmt->bindParam(':test_id', $testId);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':text', $text);
+        $stmt->bindParam(':content', $content);
+        $stmt->bindParam(':type', $type);
+        $stmt->execute();
+        return $this->conn->lastInsertId();
+    }
+
+    public function deleteQuestion($id) {
+        $stmt7 = $this->conn->prepare("DELETE FROM questions WHERE id=?");
+        $stmt7->bindValue(1, $id);
+        $stmt7->execute();
+    }
+
     public function getNewTestId() {
         $stmt7 = $this->conn->prepare("SELECT MAX(id) as max_id FROM tests");
         $stmt7->execute();
