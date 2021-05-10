@@ -185,7 +185,7 @@ $questions = $controller->getTestQuestions($newId);
         //let contents = $('#contents').text();
         jQuery.ajax({
             type: "POST",
-            url: 'savePairQuestion.php',
+            url: 'rest/savePairQuestion.php',
             dataType: 'json',
             data: {testId: id, name: questionName, text: text, content: ''},
 
@@ -209,7 +209,7 @@ $questions = $controller->getTestQuestions($newId);
         //let contents = $('#contents').text();
         jQuery.ajax({
             type: "POST",
-            url: 'savePaintQuestion.php',
+            url: 'rest/savePaintQuestion.php',
             dataType: 'json',
             data: {testId: id, name: questionName, text: text, content: ''},
 
@@ -233,7 +233,7 @@ $questions = $controller->getTestQuestions($newId);
         //let contents = $('#contents').text();
         jQuery.ajax({
             type: "POST",
-            url: 'saveTest.php',
+            url: 'rest/saveTest.php',
             dataType: 'json',
             data: {id: id, name: testName, startTime: startTime, startTimeDate: startTimeDate, time: time},
 
@@ -252,7 +252,7 @@ $questions = $controller->getTestQuestions($newId);
     function deleteQuestion(id) {
         jQuery.ajax({
             type: "POST",
-            url: 'deleteQuestion.php',
+            url: 'rest/deleteQuestion.php',
             dataType: 'json',
             data: {id: id},
 
@@ -269,6 +269,8 @@ $questions = $controller->getTestQuestions($newId);
     }
 
     function showModal(a) {
+        $('#key').val('');
+        $('#value').val('');
         $('#'+a).modal('show');
     }
 
