@@ -6,7 +6,7 @@
 require_once "controller/controller.php";
 $controller = new Controller();
 
-$newId = $controller->getNewTestId() + 1;
+$newId = $controller->getNewTestId();
 echo "<div id='testId' style='display: none;'>".$newId."</div>";
 
 $questions = $controller->getTestQuestions($newId);
@@ -57,8 +57,8 @@ $questions = $controller->getTestQuestions($newId);
                 <input type="text" class="form-control" id="startTime" name="startTime">
             </div>
             <?php
-                echo "<button class='btn btn-block btn-primary mt-2' onclick='saveTest('".$newId."')'>Ulozit test</button>";
-                echo "<button class='btn btn-block btn-warning mt-2' onclick='deleteTest('".$newId."')'>Zmazat test</button>"
+                echo "<button class='btn btn-block btn-primary mt-2' onclick='saveTest()'>Ulozit test</button>";
+                echo "<button class='btn btn-block btn-warning mt-2' onclick='deleteTest()'>Zmazat test</button>"
             ?>
         </div>
         <div class="col-6">
@@ -78,7 +78,7 @@ $questions = $controller->getTestQuestions($newId);
                 <th>Typ</th>
                 <th>Akcia</th>
             </thead>
-            <tbody>
+            <tbody id="tableBody">
             <?php
             foreach($questions as $row) {
                 echo "<tr><th>".$row["id"]."</th><th>".$row["name"]."</th><th>".$row["type"]."</th><th><button class='btn btn-warning' onclick='deleteQuestion(".$row["id"].")'>Zmazat</button></th></tr>";
@@ -198,7 +198,10 @@ $questions = $controller->getTestQuestions($newId);
             success: function (obj, textstatus) {
                 if( !('error' in obj) ) {
                     console.log(obj);
-                    window.location.reload();
+                    $('#tableBody').text('');
+                    for(let i = 0; i < obj.length; i++) {
+                        $('#tableBody').append('<tr><th>' + obj[i].id + '</th><th>'+obj[i].name+ '</th><th>' + obj[i].type + '</th><th><button class=\'btn btn-warning\' onclick=\'deleteQuestion('+obj[i].id+')\'>Zmazat</button>');
+                    }
                 }
                 else {
                     console.log(obj.error);
@@ -212,17 +215,24 @@ $questions = $controller->getTestQuestions($newId);
         let id = $('#testId').text();
         let text = $('#questionText').val();
         let questionName = $('#questionName').val();
-        //let contents = $('#contents').text();
+        console.log(questionName);
+        console.log(text);
+        console.log(id);
+        let contents = $('#contents').text();
         jQuery.ajax({
             type: "POST",
             url: 'savePaintQuestion.php',
             dataType: 'json',
-            data: {testId: id, name: questionName, text: text, content: ''},
+            data: {id: id, name: questionName, text: text, content: ''},
 
             success: function (obj, textstatus) {
                 if( !('error' in obj) ) {
                     console.log(obj);
-                    window.location.reload();
+                    $('#tableBody').text('');
+                    for(let i = 0; i < obj.length; i++) {
+                        $('#tableBody').append('<tr><th>' + obj[i].id + '</th><th>'+obj[i].name+ '</th><th>' + obj[i].type + '</th><th><button class=\'btn btn-warning\' onclick=\'deleteQuestion('+obj[i].id+')\'>Zmazat</button>');
+                    }
+                    // window.location.reload();
                 }
                 else {
                     console.log(obj.error);
@@ -231,12 +241,13 @@ $questions = $controller->getTestQuestions($newId);
         });
     }
 
-    function saveTest(id) {
+    function saveTest() {
         let testName = $('#testName').val();
         let time = $('#time').val();
         let startTime = $('#startTime').val();
         let startTimeDate = $('#startTimeDate').val();
-        //let contents = $('#contents').text();
+        let id = $('#testId').text();
+        let contents = $('#contents').text();
         jQuery.ajax({
             type: "POST",
             url: 'saveTest.php',
@@ -246,7 +257,27 @@ $questions = $controller->getTestQuestions($newId);
             success: function (obj, textstatus) {
                 if( !('error' in obj) ) {
                     console.log(obj);
-                    window.location.reload();
+                    window.location = "https://wt70.fei.stuba.sk/webtech-final/";
+                }
+                else {
+                    console.log(obj.error);
+                }
+            }
+        });
+    }
+
+    function deleteTest() {
+        let id = $('#testId').text();
+        jQuery.ajax({
+            type: "POST",
+            url: 'deleteTest.php',
+            dataType: 'json',
+            data: {id: id},
+
+            success: function (obj, textstatus) {
+                if( !('error' in obj) ) {
+                    console.log(obj);
+                    window.location = "https://wt70.fei.stuba.sk/webtech-final/";
                 }
                 else {
                     console.log(obj.error);

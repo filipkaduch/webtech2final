@@ -6,12 +6,11 @@ require_once "controller/controller.php";
 $controller = new Controller();
 $aResult = array();
 
-if( !isset($_POST['testId']) ) { $aResult['error'] = 'No  arguments!'; }
+if( !isset($_POST['id']) ) { $aResult['error'] = 'No  arguments!'; }
 
 if( !isset($aResult['error']) ) {
-    $controller->savePaintQuestion($_POST['testId'], $_POST['name'], $_POST['text'],$_POST['content']);
-
+    $rows = $controller->savePaintQuestion($_POST['id'], $_POST['name'], $_POST['text'],$_POST['content']);
 }
 
-echo json_encode($aResult);
+echo json_encode($rows);
 

@@ -9,11 +9,8 @@ $aResult = array();
 if( !isset($_POST['id']) ) { $aResult['error'] = 'No  arguments!'; }
 
 if( !isset($aResult['error']) ) {
-    $startTimeDate = $_POST['startTimeDate'];
-    $startTime = $_POST['startTime'];
-    $dateTime = date_create($startTimeDate.' '.$startTime);
-    $date = $dateTime->format("Y-m-d H:m");
-    $controller->saveTest($_POST['id'], $_POST['name'], $date, $_POST['time']);
+    echo $_POST['content'];
+    $controller->getTestQuestions($_POST['id']);
 
 }
 

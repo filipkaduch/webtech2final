@@ -1,3 +1,11 @@
+<?php
+
+require_once "controller/controller.php";
+$controller = new Controller();
+
+$tests = $controller->getTests();
+
+?>
 <html lang="sk">
 
 <head>
@@ -17,18 +25,33 @@
 
 
 
-<div class="container">
+<div class="container my-3">
     <div class="row">
         <h1>Pohlad ucitela- Testy</h1>
     </div>
     <div class="row">
-        <div class="row justify-content-center d-inline-flex">
-            <button type="button" class="btn btn-secondary mr-1" onclick="show('index')">Testy</button>
+        <div class="row justify-content-center d-inline-flex my-5">
             <button type="button" class="btn btn-secondary mr-1" onclick="show('createTest')">Vytvorit novy test</button>
         </div>
     </div>
 </div>
 
+<div class="container border rounded bg-info mb-5 w-100" style="min-height: 200px;">
+    <?php
+        $count = 0;
+        foreach($tests as $t) {
+            if($count % 3 == 0) {
+                echo "<div class='row m-4'>";
+            }
+
+            echo "<div class='col-4 p-4 bg-white border'><h3>Nazov: ".$t['name']."</h3><br><h4>Zaciatok: ".$t['startTime']."</h4><br><h4>Trvanie: ".$t['time']."</h4><br>Stav: ".$t['state']."<br><button class='btn btn-warning btn-block' id='".$t['id']."' onclick='setActive(this.id)'>Aktivuj/Deaktivuj</button><br><button class='btn btn-warning btn-block' id='".$t['id']."' onclick='deleteTest(this.id)'>Zmazat</button> </div>";
+            if($count % 3 == 2) {
+                echo "</div>";
+            }
+            $count++;
+        }
+    ?>
+</div>
 <script type="text/javascript">
 
 
@@ -56,3 +79,65 @@
         padding: 30px;
     }
 </style>
+
+<script type="text/javascript">
+
+    function saveTest() {
+        jQuery.ajax({
+            type: "POST",
+            url: 'saveTest.php',
+            dataType: 'json',
+            data: {id: id, name: testName, startTime: startTime, startTimeDate: startTimeDate, time: time},
+
+            success: function (obj, textstatus) {
+                if( !('error' in obj) ) {
+                    console.log(obj);
+                    window.location.reload();
+                }
+                else {
+                    console.log(obj.error);
+                }
+            }
+        });
+    }
+
+    function setActive(id) {
+        jQuery.ajax({
+            type: "POST",
+            url: 'setActive.php',
+            dataType: 'json',
+            data: {id: id},
+
+            success: function (obj, textstatus) {
+                if( !('error' in obj) ) {
+                    console.log(obj);
+                    window.location.reload();
+                }
+                else {
+                    console.log(obj.error);
+                }
+            }
+        });
+    }
+
+    function deleteTest(id) {
+        //let contents = $('#contents').text();
+        jQuery.ajax({
+            type: "POST",
+            url: 'deleteTest.php',
+            dataType: 'json',
+            data: {id: id},
+
+            success: function (obj, textstatus) {
+                if( !('error' in obj) ) {
+                    console.log(obj);
+                    window.location.reload();
+                }
+                else {
+                    console.log(obj.error);
+                }
+            }
+        });
+    }
+
+</script>

@@ -26,11 +26,14 @@ class Controller {
         $stmt = $this->conn->prepare('INSERT INTO questions (test_id, name, type, text, content) VALUES(:test_id, :name, :type, :text, :content)');
         $stmt->bindParam(':test_id', $testId);
         $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':type', $type);
         $stmt->bindParam(':text', $text);
         $stmt->bindParam(':content', $content);
-        $stmt->bindParam(':type', $type);
         $stmt->execute();
-        return $this->conn->lastInsertId();
+        $stmt3 = $this->conn->prepare("SELECT * FROM questions WHERE test_id=? ");
+        $stmt3->bindValue(1, $testId);
+        $stmt3->execute();
+        return $stmt3->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function savePairQuestion($testId, $name, $text, $content) {
@@ -42,6 +45,21 @@ class Controller {
         $stmt->bindParam(':content', $content);
         $stmt->bindParam(':type', $type);
         $stmt->execute();
+        $stmt3 = $this->conn->prepare("SELECT * FROM questions WHERE test_id=? ");
+        $stmt3->bindValue(1, $testId);
+        $stmt3->execute();
+        return $stmt3->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function saveTest($testId, $name, $startTime, $time) {
+        $state = 'active';
+        $stmt = $this->conn->prepare('UPDATE tests SET name=?, state=?, startTime=?, time=? WHERE id=?');
+        $stmt->bindValue(1, $name);
+        $stmt->bindValue(2, $state);
+        $stmt->bindValue(3, $startTime);
+        $stmt->bindValue(4, $time);
+        $stmt->bindValue(5, $testId);
+        $stmt->execute();
         return $this->conn->lastInsertId();
     }
 
@@ -52,10 +70,35 @@ class Controller {
     }
 
     public function getNewTestId() {
-        $stmt7 = $this->conn->prepare("SELECT MAX(id) as max_id FROM tests");
+        $stmt = $this->conn->prepare('INSERT INTO tests () VALUES()');
+        $stmt->execute();
+        return $this->conn->lastInsertId();
+    }
+
+    public function getTests() {
+        $stmt7 = $this->conn->prepare("SELECT * FROM tests");
         $stmt7->execute();
-        $invNum = $stmt7->fetch(PDO::FETCH_ASSOC);
-        return $invNum['max_id'];
+        return $stmt7->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function setActive($id) {
+        $stmt8 = $this->conn->prepare("SELECT * FROM tests WHERE id=?");
+        $stmt8->bindValue(1, $id);
+        $stmt8->execute();
+        $rows = $stmt8->fetch(PDO::FETCH_ASSOC);
+        if($rows['state'] == 'active') {
+            $stmt7 = $this->conn->prepare("UPDATE tests SET state='disabled' WHERE id=?");
+        } else {
+            $stmt7 = $this->conn->prepare("UPDATE tests SET state='active' WHERE id=?");
+        }
+        $stmt7->bindValue(1, $id);
+        $stmt7->execute();
+    }
+
+    public function deleteTest($id) {
+        $stmt7 = $this->conn->prepare("DELETE FROM tests WHERE id=?");
+        $stmt7->bindValue(1, $id);
+        $stmt7->execute();
     }
 
 }
