@@ -22,8 +22,6 @@ $questions = $controller->getTestQuestions($newId);
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/konva@7.2.5/konva.min.js"></script>
-    <script src="node_modules/@jsplumb/core/js/jsplumb.core.umd.js"></script>
-    <script src="node_modules/@jsplumb/browser-ui/js/jsplumb.browser-ui.umd.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>WEBTECH2 - final</title>
 </head>
@@ -99,7 +97,7 @@ $questions = $controller->getTestQuestions($newId);
     </div>
 </div>
 
-//modal pre otazku s otvorenou odpovedou
+<!-- modal pre otazku s otvorenou odpovedou -->
 <div id="myModalAnswer" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -144,7 +142,7 @@ $questions = $controller->getTestQuestions($newId);
     </div>
 </div>
 
-//modal pre otazku s moznostami
+<!-- modal pre otazku s moznostami -->
 <div id="myModalOptions" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -263,10 +261,7 @@ $questions = $controller->getTestQuestions($newId);
                     Hodnota: <input type="text" class="form-control" id="value" name="value">
                 </div>
                 <button class="btn btn-primary" type="button" name="submit" onclick="addPair()">Pridat par +</button>
-                <div class="jtk-demo-main">
-                    <div class="" id="canvas" style="height: 600px;">
-                    </div>
-                </div>
+                <div id="container"></div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" type="button" name="submit" onclick="addPairQuestion()">Ulozit otazku</button>
@@ -283,7 +278,6 @@ $questions = $controller->getTestQuestions($newId);
 </div>
 
 <script src="script/script.js"></script>
-<script src="script/jsplumb.js"></script>
 
 </body>
 
@@ -300,29 +294,20 @@ $questions = $controller->getTestQuestions($newId);
         justify-content: center;
         padding: 30px;
     }
-
-    .window {
-        height: 40px;
-        width: 40px;
-        border: 2px solid black;
-    }
 </style>
 
 
 <script type="text/javascript">
 
-    /* let stage = new Konva.Stage({
+    let stage = new Konva.Stage({
         container: 'container',
         width: 460,
         height: 300,
-    }); */
-
+    });
 
     let i = 1;
-    let b = 2;
-    let pairContent = [];
 
-    /*let layer = new Konva.Layer();*/
+    let layer = new Konva.Layer();
 
     //otvorena odpoved
     function addAnswerQuestion() {
@@ -419,8 +404,8 @@ $questions = $controller->getTestQuestions($newId);
         let id = $('#testId').text();
         let text = $('#questionText2').val();
         let questionName = $('#questionName2').val();
-        console.log(pairContent);
-        let myJSON = JSON.stringify(pairContent);
+        let json = stage.toJSON();
+        let myJSON = JSON.stringify(json);
         console.log(myJSON);
         //let contents = $('#contents').text();
         jQuery.ajax({
@@ -430,7 +415,6 @@ $questions = $controller->getTestQuestions($newId);
             data: {testId: id, name: questionName, text: text, content: myJSON},
 
             success: function (obj, textstatus) {
-                console.log(obj);
                 if( !('error' in obj) ) {
                     console.log(obj);
                     $('#tableBody').text('');
@@ -450,6 +434,9 @@ $questions = $controller->getTestQuestions($newId);
         let id = $('#testId').text();
         let text = $('#questionText').val();
         let questionName = $('#questionName').val();
+        console.log(questionName);
+        console.log(text);
+        console.log(id);
         let contents = $('#contents').text();
         jQuery.ajax({
             type: "POST",
@@ -479,7 +466,7 @@ $questions = $controller->getTestQuestions($newId);
         let startTime = $('#startTime').val();
         let startTimeDate = $('#startTimeDate').val();
         let id = $('#testId').text();
-        //let contents = JSON.stringify(pairContent);
+        let contents = $('#contents').text();
         jQuery.ajax({
             type: "POST",
             url: 'saveTest.php',
@@ -538,6 +525,7 @@ $questions = $controller->getTestQuestions($newId);
     }
 
     function showModal(a) {
+        stage.clear();
         $('#key').val('');
         $('#value').val('');
         $('#questionText').val();
@@ -558,57 +546,59 @@ $questions = $controller->getTestQuestions($newId);
         let key = $('#key').val();
         let value = $('#value').val();
 
-        jsPlumb.ready(function() {
-            let bottom = i * 10;
-            $('#canvas').append("<div class='window' id='"+"dragDropWindow"+i.toString()+"' style='position: relative; bottom: -"+bottom+"px'>"+key+"</div>");
-            $('#canvas').append("<div class='window' id='"+"dragDropWindow"+b.toString()+"' style='position: relative; right: -400px; bottom: -"+bottom+"px'>"+value+"</div>");
-            pairContent.push({key: key, value: value});
-            var instance = jsPlumb.getInstance({
-                DragOptions: { cursor: 'pointer', zIndex: 2000 },
-                PaintStyle: { stroke: '#666' },
-                EndpointHoverStyle: { fill: "orange" },
-                HoverPaintStyle: { stroke: "orange" },
-                isSource:true,
-                isTarget:true,
-                EndpointStyle: { width: 20, height: 16, stroke: '#666' },
-                Endpoint: "Rectangle",
-                Container: "canvas"
-            });
-            var endpointOptions = { endpoint:["Rectangle",{ width:20, height:20}], isSource:true, isTarget:true, reattach: true, beforeDrop: function (params) {
-                    return confirm("Connect " + params.sourceId + " to " + params.targetId + "?");
-                }};
-            var window3Endpoint = jsPlumb.addEndpoint('dragDropWindow'+i.toString(), { anchor:"Right" }, endpointOptions );
-            var window4Endpoint = jsPlumb.addEndpoint('dragDropWindow'+b.toString(), { anchor:"Left" }, endpointOptions );
-            instance.importDefaults({
-                Connector : [ "Bezier", { curviness: 35 } ],
-                Anchors : [ "Top" ]
-            });
-
-            /*jsPlumb.connect({
-                source:window3Endpoint,
-                target:window4Endpoint,
-                connector: [ "Bezier", { curviness:35 } ],
-                paintStyle:{ strokeWidth:10, stroke:'yellow' }
-            });*/
-
-
-/*
-            var endpointOptions = {
-                connector : "Straight",
-                connectorStyle: { strokeWidth:20, stroke:'blue' },
-                scope:"blueline",
-                dragAllowedWhenFull:false
-            };
-            var window3Endpoint = jsPlumb.addEndpoint('dragDropWindow1', { anchor:"Top" }, endpointOptions );
-            var window4Endpoint = jsPlumb.addEndpoint('dragDropWindow2', { anchor:"BottomCenter" }, endpointOptions );*/
+        let rectangleKey = new Konva.Group({
+            x: i*25,
+            y: i*25,
+            width: 130,
+            height: 25,
+            draggable: true,
+            stroke: 'black',
+            strokeWidth: 2,
         });
-        b+=2;
-        i+=2;
+
+        rectangleKey.add(new Konva.Rect({
+            width: 130,
+            height: 25,
+            fill: 'lightblue'
+        }));
+        rectangleKey.add(new Konva.Text({
+            text:key,
+            fontSize: 18,
+            fontFamily: 'Calibri',
+            fill: '#000',
+            width: 130,
+            padding: 5,
+            align: 'center'
+        }));
+
+        let rectangleValue = new Konva.Group({
+            x: 25,
+            y: 25,
+            width: 130,
+            height: 25,
+            draggable: true,
+            stroke: 'black',
+            strokeWidth: 2,
+        });
+
+        rectangleValue.add(new Konva.Rect({
+            width: 130,
+            height: 25,
+            fill: 'blue'
+        }));
+        rectangleValue.add(new Konva.Text({
+            text:value,
+            fontSize: 18,
+            fontFamily: 'Calibri',
+            fill: '#000',
+            width: 130,
+            padding: 5,
+            align: 'center'
+        }));
+        layer.add(rectangleKey);
+        layer.add(rectangleValue);
+        stage.add(layer);
+        i++;
     }
-
-
-
-
-
 
 </script>

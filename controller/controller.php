@@ -77,7 +77,7 @@ class Controller {
         $stmt->bindParam(':content', $content);
         $stmt->bindParam(':type', $type);
         $stmt->execute();
-        $stmt3 = $this->conn->prepare("SELECT * FROM questions WHERE test_id=?");
+        $stmt3 = $this->conn->prepare("SELECT * FROM questions WHERE test_id=? ");
         $stmt3->bindValue(1, $testId);
         $stmt3->execute();
         return $stmt3->fetchAll(PDO::FETCH_ASSOC);
@@ -112,6 +112,13 @@ class Controller {
         $stmt = $this->conn->prepare('INSERT INTO questions () VALUES()');
         $stmt->execute();
         return $this->conn->lastInsertId();
+    }
+
+    //test podla ID
+    public function getTest($id) {
+        $stmt7 = $this->conn->prepare("SELECT * FROM tests WHERE id=$id");
+        $stmt7->execute();
+        return $stmt7->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getTests() {

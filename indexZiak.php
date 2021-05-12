@@ -3,7 +3,7 @@
 require_once "controller/controller.php";
 $controller = new Controller();
 
-$questions = $controller->getTestQuestions(1);
+$questions = $controller->getTestQuestions(75);
 
 ?>
 <html lang="sk">
@@ -45,6 +45,44 @@ $questions = $controller->getTestQuestions(1);
                 echo "<div id='canvas'></div>";
             } else if($q['type'] == 'pair') {
                 echo "<div id='container'></div>";
+            }
+        }
+        //generovanie otazok s otvorenou odpovedou a moznostami
+        $count = 1;
+        echo "<br><br><br>";
+        foreach($questions as $question){
+            if($question['type'] == 'answer'){
+                echo 
+                "<div class='mb-3'>
+                    <div class=''>
+                        <h4>".$count.". ".$question['text']."</h4>
+                    </div>
+                    <div class=''>
+                        <input class=''></input>
+                    </div>
+                </div>";
+                $count++;
+            }
+            else if($question['type'] == 'options'){
+                $arrNumber = $count - 1;
+                $option = json_decode($questions[$arrNumber]['content'], true);
+                echo 
+                "<div class='mb-3'>
+                    <div class=''>
+                        <h4>".$count.". ".$question['text']."</h4>
+                    </div>
+                    <div class='form-check'>";
+                    for($i =1; $i <=4; $i++){  
+                        $optionNumber = 'option'.$i;                 
+                        echo 
+                        "<input type='checkbox' class='form-check-input' id='".$optionNumber."Check'></input>
+                        <label class='form-check-label' for='".$optionNumber."Check'>".$option[$optionNumber]."</label>
+                        <br>";
+                    }
+                echo
+                    "</div>
+                </div>";
+                $count++;
             }
         }
     ?>
