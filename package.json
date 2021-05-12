@@ -1,0 +1,8 @@
+{
+  "name": "webtechfinal2",
+  "version": "1.0.0",
+  "dependencies": {
+    "@jsplumb/browser-ui": "^4.0.0",
+    "jsplumb": "^2.15.5"
+  }
+}

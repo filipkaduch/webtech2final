@@ -45,7 +45,7 @@ class Controller {
         $stmt->bindParam(':content', $content);
         $stmt->bindParam(':type', $type);
         $stmt->execute();
-        $stmt3 = $this->conn->prepare("SELECT * FROM questions WHERE test_id=? ");
+        $stmt3 = $this->conn->prepare("SELECT * FROM questions WHERE test_id=?");
         $stmt3->bindValue(1, $testId);
         $stmt3->execute();
         return $stmt3->fetchAll(PDO::FETCH_ASSOC);
