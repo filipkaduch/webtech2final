@@ -21,6 +21,38 @@ class Controller {
         return $stmt3->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    //otvorena odpoved
+    public function saveAnswerQuestion($testId, $name, $text, $content) {
+        $type = 'answer';
+        $stmt = $this->conn->prepare('INSERT INTO questions (test_id, name, type, text, content) VALUES(:test_id, :name, :type, :text, :content)');
+        $stmt->bindParam(':test_id', $testId);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':type', $type);
+        $stmt->bindParam(':text', $text);
+        $stmt->bindParam(':content', $content);
+        $stmt->execute();
+        $stmt3 = $this->conn->prepare("SELECT * FROM questions WHERE test_id=? ");
+        $stmt3->bindValue(1, $testId);
+        $stmt3->execute();
+        return $stmt3->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    //otazka s moznostami
+    public function saveOptionsQuestion($testId, $name, $text, $content) {
+        $type = 'options';
+        $stmt = $this->conn->prepare('INSERT INTO questions (test_id, name, type, text, content) VALUES(:test_id, :name, :type, :text, :content)');
+        $stmt->bindParam(':test_id', $testId);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':type', $type);
+        $stmt->bindParam(':text', $text);
+        $stmt->bindParam(':content', $content);
+        $stmt->execute();
+        $stmt3 = $this->conn->prepare("SELECT * FROM questions WHERE test_id=? ");
+        $stmt3->bindValue(1, $testId);
+        $stmt3->execute();
+        return $stmt3->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function savePaintQuestion($testId, $name, $text, $content = "") {
         $type = 'paint';
         $stmt = $this->conn->prepare('INSERT INTO questions (test_id, name, type, text, content) VALUES(:test_id, :name, :type, :text, :content)');
@@ -71,6 +103,13 @@ class Controller {
 
     public function getNewTestId() {
         $stmt = $this->conn->prepare('INSERT INTO tests () VALUES()');
+        $stmt->execute();
+        return $this->conn->lastInsertId();
+    }
+
+    //id otazky(chcel som do zvlast db tabulky ukladat viac odpovedi ale neslo mi to kedtak to potom nejak skusim dorobit)
+    public function getNewQuestionId() {
+        $stmt = $this->conn->prepare('INSERT INTO questions () VALUES()');
         $stmt->execute();
         return $this->conn->lastInsertId();
     }
