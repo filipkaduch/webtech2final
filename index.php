@@ -36,6 +36,7 @@ if(isset($_SESSION['ucitel_id'])) {
     <div class="row">
         <div class="row justify-content-center d-inline-flex my-5">
             <button type="button" class="btn btn-secondary mr-1" onclick="show('createTest')">Vytvorit novy test</button>
+            <button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
         </div>
     </div>
 </div>
@@ -49,7 +50,7 @@ if(isset($_SESSION['ucitel_id'])) {
             }
 
             echo "<div class='col-4 p-4 bg-white border'><h3>Nazov: ".$t['name']."</h3><br><h4>Zaciatok: ".$t['startTime']."</h4><br>
-            <h4>Trvanie: ".$t['time']."</h4><br>Stav: ".$t['state']."<br>
+            <h4>Trvanie: ".$t['time']."</h4><br><h4>Stav: ".$t['state']."</h4><br>
             <h4>Token:</h4><small>".$t['token']."</small>
             <button class='btn btn-warning btn-block' id='".$t['id']."' onclick='setActive(this.id)'>Aktivuj/Deaktivuj</button><br>
             <button class='btn btn-warning btn-block' id='".$t['id']."' onclick='deleteTest(this.id)'>Zmazat</button>
@@ -73,15 +74,15 @@ if(isset($_SESSION['ucitel_id'])) {
 
 <script src="script/script.js"></script>
 
-<br>
-<button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
-<br>
 
 </body>
 
 
 </html>
 <style>
+    body {
+        background-color: floralwhite;
+    }
     .control-bar {
         height: 300px;
         background-color: cornsilk;

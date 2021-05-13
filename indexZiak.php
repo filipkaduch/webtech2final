@@ -10,6 +10,7 @@ if(isset($_SESSION['ziak_id'])) {
     $testId = $controller->getTestIdFromUser(intval($_SESSION['ziak_id']));
     $questions = $controller->getTestQuestions($testId['test_id']);
     $test = $controller->getTest($testId['test_id']);
+    $user = $controller->getStudent($userId);
     $ziakId = $_SESSION['ziak_id'];
 }
 
@@ -43,11 +44,12 @@ if(isset($_SESSION['ziak_id'])) {
         <div class="row justify-content-center d-inline-flex my-5">
             <button type="button" class="btn btn-secondary mr-1" onclick="submitTest('createTest')">Odovzdat test</button>
             <button type="button" id='startBtn' class="btn btn-secondary mr-1" onclick="showTest()">Spustit test</button>
+            <button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
             <br>
             <?php
             echo "<div id='testTime' style='display: none;'>".$test['time']."</div>";
             ?>
-            <h4 id="countdown"></h4>
+            <h4 id="countdown" class="ml-4 font-weight-bold"></h4>
         </div>
         <div class="row d-block my-5">
             <h3>Nazov: <?php echo $test['name']?></h3>
@@ -82,7 +84,7 @@ if($test['state'] === 'disabled') {
             $cou = 1;
             echo "<div class='row m-4 d-block p-2 bg-info rounded'><h4>".$tem." Nazov otazky: ".$q['name']."</h4><h4>Typ: ".$q['type']."</h4><h4>Zadanie: ".$q['text']."</h4></div>";
             if($q['type'] == 'paint') {
-                echo "<div class='row m-2 align-items-center justify-content-between d-inline-flex w-100'><button class='btn btn-primary m-3' id='bttnQ".$q['id']."' onclick='showCanvas(this)'>Nakreslit v editore</button><label class='label' for='fileQ".$q['id']."'>Nahrat obrazok</label><input type='file' class='form-control mr-4' style='width: 300px;' name='file".$q['id']."' id='fileQ".$q['id']."'></div><div id='cnv".$q['id']."' class='cnv' style='height: 600px;'><div id='canvas".$q['id']."'></div><button class='btn btn-primary' id='confP".$q['id']."' onclick='saveCanvas(this)'>Potvrdit nakres</button></div><button class='btn btn-primary' id='confU".$q['id']."' onclick='saveFile(this)'>Odovzdat subor</button>";
+                echo "<div class='row m-2 align-items-center justify-content-between d-inline-flex w-100'><button class='btn btn-primary m-3' id='bttnQ".$q['id']."' onclick='showCanvas(this)'>Nakreslit v editore</button><label class='label' for='fileQ".$q['id']."'>Nahrat obrazok</label><input type='file' class='form-control mr-4' style='width: 300px;' name='file".$q['id']."' id='fileQ".$q['id']."'><button class='btn btn-primary mr-5' id='confU".$q['id']."' onclick='saveFile(this)'>Odovzdat subor</button></div><div id='cnv".$q['id']."' class='cnv' style='height: 600px;'><div id='canvas".$q['id']."'></div><button class='btn btn-primary' id='confP".$q['id']."' onclick='saveCanvas(this)'>Potvrdit nakres</button></div>";
             } else if($q['type'] == 'pair') {
                 echo "<div class='row m-2 align-items-center justify-content-between d-inline-flex w-100'><button class='btn btn-primary m-3 ml-4' id='pairQ".$q['id']."' onclick='generatePair(this)' >Vygeneruj parove otazky</button><div class='vysledok mr-5' style='font-size: 25px;' id='pairR".$q['id']."'></div></div>";
                 echo "<div class='jtk-demo-main mx-4 mt-3'><div id='pairCanvas".$q['id']."' style='height: 600px; width: 466px; position: relative'></div></div>";
@@ -128,15 +130,15 @@ if($test['state'] === 'disabled') {
 <script src="script/script.js"></script>
 <script src="script/jsplumb.js"></script>
 
-<br>
-<button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
-<br>
 
 </body>
 
 
 </html>
 <style>
+    body {
+        background-color: floralwhite;
+    }
     .control-bar {
         height: 300px;
         background-color: cornsilk;
@@ -231,7 +233,7 @@ if($test['state'] === 'disabled') {
                 testId: testId
             }
         }).done(function(o) {
-
+            window.location = "https://wt70.fei.stuba.sk/webtech-final/logout.php";
         });
 
     }
@@ -304,6 +306,7 @@ if($test['state'] === 'disabled') {
         });
     }
 
+    let startingMinutes = 10;
     const testTime = $('#testTime').text(); //started v users
     let testSeconds = startingMinutes * 60;
 
