@@ -147,13 +147,6 @@ class Controller {
         return $this->conn->lastInsertId();
     }
 
-    //test podla ID
-    public function getTest($id) {
-        $stmt7 = $this->conn->prepare("SELECT * FROM tests WHERE id=$id");
-        $stmt7->execute();
-        return $stmt7->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public function getTests() {
         $stmt7 = $this->conn->prepare("SELECT * FROM tests");
         $stmt7->execute();

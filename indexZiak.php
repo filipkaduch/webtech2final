@@ -4,8 +4,8 @@ require_once "controller/controller.php";
 $controller = new Controller();
 
 
-$questions = $controller->getTestQuestions(1);
-$test = $controller->getTest(1);
+$questions = $controller->getTestQuestions(96);
+$test = $controller->getTest(96);
 
 
 ?>
@@ -67,12 +67,30 @@ if($test['state'] === 'disabled') {
         //POUZIVAM ID OTAZKY PRI GENEROVANI ELEMENTOV PRE PRIPAD VIACERYCH OTAZOK ROVNAKEHO TYPU
         //CLASS VYSLEDOK POUZIVAM KVOLI ODOVZDANIU TESTU ABY SA ZOZBIERALI VSETKY AUTOMATICKY OPRAVOVANE OTAZKY
         foreach($questions as $q) {
+            $cou = 1;
             echo "<div class='row m-4 d-block p-2 bg-info rounded'><h4>".$tem." Nazov otazky: ".$q['name']."</h4><h4>Typ: ".$q['type']."</h4><h4>Zadanie: ".$q['text']."</h4></div>";
             if($q['type'] == 'paint') {
                 echo "<div class='row m-2 align-items-center justify-content-between d-inline-flex w-100'><button class='btn btn-primary m-3' id='bttnQ".$q['id']."' onclick='showCanvas(this)'>Nakreslit v editore</button><label class='label' for='fileQ".$q['id']."'>Nahrat obrazok</label><input type='file' class='form-control mr-4' style='width: 300px;' name='file".$q['id']."' id='fileQ".$q['id']."' onclick='showCanvas(this)'></div><div id='cnv".$q['id']."' class='cnv' style='height: 600px;'><div id='canvas".$q['id']."'></div><button class='btn btn-primary' id='confP".$q['id']."' onclick='saveCanvas(this)'>Potvrdit nakres</button></div>";
             } else if($q['type'] == 'pair') {
                 echo "<div class='row m-2 align-items-center justify-content-between d-inline-flex w-100'><button class='btn btn-primary m-3 ml-4' id='pairQ".$q['id']."' onclick='generatePair(this)' >Vygeneruj parove otazky</button><div class='vysledok mr-5' style='font-size: 25px;' id='pairR".$q['id']."'></div></div>";
                 echo "<div class='jtk-demo-main mx-4 mt-3'><div id='pairCanvas".$q['id']."' style='height: 600px; width: 466px; position: relative'></div></div>";
+            } else if($q['type'] == 'options') {
+                $arrNumber = $cou - 1;
+                $option = json_decode($q['content'], true);
+                echo
+                    "<div class='row m-2 align-items-center justify-content-between d-inline-flex w-100'>
+                    <div class='form-check'>";
+                for($i =1; $i <=4; $i++){
+                    $optionNumber = 'option'.$i;
+                    echo
+                        "<input type='checkbox' class='form-check-input' id='".$optionNumber."Check'></input>
+                        <label class='form-check-label' for='".$optionNumber."Check'>".$option[$optionNumber]."</label>
+                        <br>";
+                }
+                echo
+                "</div>
+                </div>";
+
             }
             $tem += 1;
         }
@@ -84,7 +102,7 @@ if($test['state'] === 'disabled') {
                 echo 
                 "<div class='mb-3'>
                     <div class=''>
-                        <h4>".$count.". ".$question['text']."</h4>
+                        <h4>".$count.".".$question['text']."</h4>
                     </div>
                     <div class=''>
                         <input class=''></input>

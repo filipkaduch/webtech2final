@@ -22,6 +22,8 @@ $questions = $controller->getTestQuestions($newId);
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/konva@7.2.5/konva.min.js"></script>
+    <script src="node_modules/@jsplumb/core/js/jsplumb.core.umd.js"></script>
+    <script src="node_modules/@jsplumb/browser-ui/js/jsplumb.browser-ui.umd.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>WEBTECH2 - final</title>
 </head>
@@ -116,8 +118,8 @@ $questions = $controller->getTestQuestions($newId);
                 </div>
                 <button class="btn btn-primary" type="button" name="submit" onclick="addAnswer()">Pridat odpoved +</button>
                 <!-- <div id="container"></div> -->
-                <?php 
-                // $answers = $controller->getAnswers($questionID); 
+                <?php
+                // $answers = $controller->getAnswers($questionID);
                 ?>
                 <div class="mt-2">
                     <table class="">
@@ -168,7 +170,7 @@ $questions = $controller->getTestQuestions($newId);
                         </label>
                     </div>
                     </div>
-                    
+
                 </div>
                 <div class="form-group row">
                     <label for="option2" class="col-sm-2 col-form-label">b)</label>
@@ -181,7 +183,7 @@ $questions = $controller->getTestQuestions($newId);
                         </label>
                     </div>
                     </div>
-                    
+
                 </div>
                 <div class="form-group row">
                     <label for="option3" class="col-sm-2 col-form-label">c)</label>
@@ -194,7 +196,7 @@ $questions = $controller->getTestQuestions($newId);
                         </label>
                     </div>
                     </div>
-                    
+
                 </div>
                 <div class="form-group row">
                     <label for="option4" class="col-sm-2 col-form-label">d)</label>
@@ -207,7 +209,7 @@ $questions = $controller->getTestQuestions($newId);
                         </label>
                     </div>
                     </div>
-                    
+
                 </div>
             </div>
             <div class="modal-footer">
@@ -261,7 +263,10 @@ $questions = $controller->getTestQuestions($newId);
                     Hodnota: <input type="text" class="form-control" id="value" name="value">
                 </div>
                 <button class="btn btn-primary" type="button" name="submit" onclick="addPair()">Pridat par +</button>
-                <div id="container"></div>
+                <div class="jtk-demo-main">
+                    <div class="" id="canvas" style="height: 600px;">
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" type="button" name="submit" onclick="addPairQuestion()">Ulozit otazku</button>
@@ -278,6 +283,7 @@ $questions = $controller->getTestQuestions($newId);
 </div>
 
 <script src="script/script.js"></script>
+<script src="script/jsplumb.js"></script>
 
 </body>
 
@@ -293,6 +299,12 @@ $questions = $controller->getTestQuestions($newId);
         display: flex;
         justify-content: center;
         padding: 30px;
+    }
+
+    .window {
+        height: 40px;
+        width: 40px;
+        border: 2px solid black;
     }
 </style>
 
@@ -399,7 +411,6 @@ $questions = $controller->getTestQuestions($newId);
         let id = $('#testId').text();
         let text = $('#questionText2').val();
         let questionName = $('#questionName2').val();
-
         let myJSON = JSON.stringify(pairContent);
 
         jQuery.ajax({
@@ -409,6 +420,7 @@ $questions = $controller->getTestQuestions($newId);
             data: {testId: id, name: questionName, text: text, content: myJSON},
 
             success: function (obj, textstatus) {
+                console.log(obj);
                 if( !('error' in obj) ) {
                     $('#tableBody').text('');
                     for(let i = 0; i < obj.length; i++) {
@@ -427,9 +439,6 @@ $questions = $controller->getTestQuestions($newId);
         let id = $('#testId').text();
         let text = $('#questionText').val();
         let questionName = $('#questionName').val();
-        console.log(questionName);
-        console.log(text);
-        console.log(id);
         let contents = $('#contents').text();
         jQuery.ajax({
             type: "POST",
@@ -459,7 +468,7 @@ $questions = $controller->getTestQuestions($newId);
         let startTime = $('#startTime').val();
         let startTimeDate = $('#startTimeDate').val();
         let id = $('#testId').text();
-        let contents = $('#contents').text();
+        //let contents = JSON.stringify(pairContent);
         jQuery.ajax({
             type: "POST",
             url: 'saveTest.php',
@@ -518,7 +527,6 @@ $questions = $controller->getTestQuestions($newId);
     }
 
     function showModal(a) {
-        stage.clear();
         $('#key').val('');
         $('#value').val('');
         $('#questionText').val();
@@ -569,10 +577,32 @@ $questions = $controller->getTestQuestions($newId);
                 Connector : [ "Bezier", { curviness: 35 } ],
                 Anchors : [ "Top" ]
             });
-            
+
+            /*jsPlumb.connect({
+                source:window3Endpoint,
+                target:window4Endpoint,
+                connector: [ "Bezier", { curviness:35 } ],
+                paintStyle:{ strokeWidth:10, stroke:'yellow' }
+            });*/
+
+
+/*
+            var endpointOptions = {
+                connector : "Straight",
+                connectorStyle: { strokeWidth:20, stroke:'blue' },
+                scope:"blueline",
+                dragAllowedWhenFull:false
+            };
+            var window3Endpoint = jsPlumb.addEndpoint('dragDropWindow1', { anchor:"Top" }, endpointOptions );
+            var window4Endpoint = jsPlumb.addEndpoint('dragDropWindow2', { anchor:"BottomCenter" }, endpointOptions );*/
         });
         b+=2;
         i+=2;
     }
+
+
+
+
+
 
 </script>
