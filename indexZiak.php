@@ -43,6 +43,11 @@ if(isset($_SESSION['ziak_id'])) {
         <div class="row justify-content-center d-inline-flex my-5">
             <button type="button" class="btn btn-secondary mr-1" onclick="submitTest('createTest')">Odovzdat test</button>
             <button type="button" id='startBtn' class="btn btn-secondary mr-1" onclick="showTest()">Spustit test</button>
+            <br>
+            <?php
+            echo "<div id='testTime' style='display: none;'>".$test['time']."</div>";
+            ?>
+            <h4 id="countdown"></h4>
         </div>
         <div class="row d-block my-5">
             <h3>Nazov: <?php echo $test['name']?></h3>
@@ -299,11 +304,32 @@ if($test['state'] === 'disabled') {
         });
     }
 
+    const testTime = $('#testTime').text(); //started v users
+    let testSeconds = startingMinutes * 60;
+
+    const countdownEl = document.getElementById('countdown');
+
+    function updateCountdown(){
+        const minutes = Math.floor(testSeconds / 60);
+        let seconds = testSeconds % 60;
+
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        countdownEl.innerHTML = (minutes) + ":" +(seconds);
+        if(testSeconds == 0){
+            submitTest()
+            countdownEl.innerHTML = "Koniec testu";
+        }
+        else{
+            testSeconds--;
+        }
+    }
     function showTest() {
         $('#test').toggleClass('d-none');
         $('#startBtn').prop('disabled', true);
 
         //TUTO DOPLN TIMER KOD
+        setInterval(updateCountdown,1000);
     }
 
     function showCanvas(el) {
