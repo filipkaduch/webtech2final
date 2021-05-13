@@ -36,7 +36,7 @@ $test = $controller->getTest(96);
     <div class="container">
         <div class="row justify-content-center d-inline-flex my-5">
             <button type="button" class="btn btn-secondary mr-1" onclick="submitTest('createTest')">Odovzdat test</button>
-            <button type="button" class="btn btn-secondary mr-1" onclick="">Spustit test</button>
+            <button type="button" id='startBtn' class="btn btn-secondary mr-1" onclick="showTest()">Spustit test</button>
         </div>
         <div class="row d-block my-5">
             <h3>Nazov: <?php echo $test['name']?></h3>
@@ -54,7 +54,7 @@ if($test['state'] === 'disabled') {
 }
 ?>
 </div>
-<div class="container rounded bg-white mb-5 w-100" style="min-height: 1200px; visibility:<?php
+<div id='test' class="d-none container rounded bg-white mb-5 w-100" style="min-height: 1200px; visibility:<?php
 if($test['state'] === 'disabled') {
     echo "hidden;";
 } else {
@@ -284,6 +284,13 @@ if($test['state'] === 'disabled') {
         }).done(function(o) {
 
         });
+    }
+
+    function showTest() {
+        $('#test').toggleClass('d-none');
+        $('#startBtn').prop('disabled', true);
+
+        //TUTO DOPLN TIMER KOD
     }
 
     function showCanvas(el) {

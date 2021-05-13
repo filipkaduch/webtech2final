@@ -16,8 +16,8 @@ if (isset($_POST['login'])) {
     $token = $_POST['token'];
     $firstname = $_POST['firstname'];
     $surname = $_POST['surname'];
-    $query = $conn->prepare("SELECT * FROM test WHERE token=:token");
-    $query->bindParam("token", $token, PDO::PARAM_STR);
+    $query = $conn->prepare("SELECT * FROM tests WHERE token=:token");
+    $query->bindParam("token", $token);
     $query->execute();
     $result = $query->fetch(PDO::FETCH_ASSOC);
 }
@@ -52,15 +52,14 @@ if (isset($_POST['login'])) {
 
                 echo "<div class=" . "'alert alert-danger'" . " role= alert" . ">Nesprávne meno alebo hesloo!</div>";
             } else {
-                if ($token ==$result['token']) {
+                if ($token == $result['token']) {
 
-                    $sql = "INSERT INTO users (token, firstname, surname) VALUES (?,?,?)";
+                    $sql = "INSERT INTO users (token, firstname, surname, test_id) VALUES (?,?,?,?)";
                     $stm = $conn->prepare($sql);
-                    $stm->execute([$token, $firstname, $surname]);
+                    $stm->execute([$token, $firstname, $surname, $result['id']]);
                     $_SESSION['user_login'] = $_POST['firstname'];
                     //doplniť presmerovanie na stránku učiteľa
-                    header("location: https://wt70.fei.stuba.sk/webtech-final/indexZiak.php/.php");
-                    echo "<div class=" . "'p-3 mb-2 bg-secondary text-white'>Prihlásený úžívateľ: " . $_SESSION['user_login'] . "</div>";
+                    header("location: https://wt70.fei.stuba.sk/webtech-final/indexZiak.php");
 
                 } else {
                     echo "<div class=" . "'alert alert-danger'" . " role= alert" . ">Nesprávne meno alebo heslo!</div>";

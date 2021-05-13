@@ -117,13 +117,15 @@ class Controller {
     }
 
     public function saveTest($testId, $name, $startTime, $time) {
-        $state = 'active';
-        $stmt = $this->conn->prepare('UPDATE tests SET name=?, state=?, startTime=?, time=? WHERE id=?');
+        $state = 'disabled';
+        $token = "".time().uniqid(rand());
+        $stmt = $this->conn->prepare('UPDATE tests SET name=?, state=?, startTime=?, time=?, token=? WHERE id=?');
         $stmt->bindValue(1, $name);
         $stmt->bindValue(2, $state);
         $stmt->bindValue(3, $startTime);
         $stmt->bindValue(4, $time);
-        $stmt->bindValue(5, $testId);
+        $stmt->bindValue(6, $testId);
+        $stmt->bindValue(5, $token);
         $stmt->execute();
         return $this->conn->lastInsertId();
     }
