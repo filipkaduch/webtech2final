@@ -38,15 +38,18 @@ $test = $controller->getTest($testId);
 
 <div class="container border rounded bg-info mb-5 w-100" style="min-height: 200px;">
     <h2 class="text-center mt-2"><?php echo $test[0]['name']?></h2>
+    <div class="d-none" id="testId"><?php echo $testId?></div>
     <table class="table table-light mt-3">
         <thead class="thead-dark">
             <th>Student</th>
             <th>Status</th>
+            <th>Akcia</th>
         </thead>
         <tbody>
             <tr>
                 <td>Meno studenta</td>
                 <td>robi/dokoncil</td>
+                <td><a class='btn btn-warning' href='checkTest.php?userId=<?php echo 1?>&testId=<?php echo $testId?>' role='button'>Pozriet test</a></td>
             </tr>
         </tbody>
     </table>
@@ -66,3 +69,22 @@ $test = $controller->getTest($testId);
 </body>
 
 </html>
+
+<script type="text/javascript">
+
+    function showAnswers() {
+        let testId = $('#testId').text();
+        $.ajax({
+            type: "POST",
+            url: "checkTest.php",
+            data: {
+                userId: 1,
+                testId: testId
+            }
+        }).done(function(o) {
+
+        });
+
+    }
+
+</script>

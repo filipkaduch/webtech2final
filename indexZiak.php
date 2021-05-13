@@ -4,10 +4,13 @@ require_once "controller/controller.php";
 $controller = new Controller();
 
 session_start();
+
+$ziakId = 0;
 if(isset($_SESSION['ziak_id'])) {
-    $testId = $controller->getTestIdFromUser($_SESSION['ziak_id']);
-    $questions = $controller->getTestQuestions($testId);
-    $test = $controller->getTest($testId);
+    $testId = $controller->getTestIdFromUser(intval($_SESSION['ziak_id']));
+    $questions = $controller->getTestQuestions($testId['test_id']);
+    $test = $controller->getTest($testId['test_id']);
+    $ziakId = $_SESSION['ziak_id'];
 }
 
 
@@ -52,6 +55,7 @@ if(isset($_SESSION['ziak_id'])) {
 <div class="container">
 <?php
 echo "<div id='testId' style='display: none;'>".$test['id']."</div>";
+echo "<div id='ziakId' style='display: none;'>".$ziakId."</div>";
 if($test['state'] === 'disabled') {
     echo "<h4>TEST JE MOMENTALNE ZABLOKOVANY. ZACAT MA:".$test['startTime']."</h4>";
 }
@@ -73,7 +77,7 @@ if($test['state'] === 'disabled') {
             $cou = 1;
             echo "<div class='row m-4 d-block p-2 bg-info rounded'><h4>".$tem." Nazov otazky: ".$q['name']."</h4><h4>Typ: ".$q['type']."</h4><h4>Zadanie: ".$q['text']."</h4></div>";
             if($q['type'] == 'paint') {
-                echo "<div class='row m-2 align-items-center justify-content-between d-inline-flex w-100'><button class='btn btn-primary m-3' id='bttnQ".$q['id']."' onclick='showCanvas(this)'>Nakreslit v editore</button><label class='label' for='fileQ".$q['id']."'>Nahrat obrazok</label><input type='file' class='form-control mr-4' style='width: 300px;' name='file".$q['id']."' id='fileQ".$q['id']."' onclick='showCanvas(this)'></div><div id='cnv".$q['id']."' class='cnv' style='height: 600px;'><div id='canvas".$q['id']."'></div><button class='btn btn-primary' id='confP".$q['id']."' onclick='saveCanvas(this)'>Potvrdit nakres</button></div>";
+                echo "<div class='row m-2 align-items-center justify-content-between d-inline-flex w-100'><button class='btn btn-primary m-3' id='bttnQ".$q['id']."' onclick='showCanvas(this)'>Nakreslit v editore</button><label class='label' for='fileQ".$q['id']."'>Nahrat obrazok</label><input type='file' class='form-control mr-4' style='width: 300px;' name='file".$q['id']."' id='fileQ".$q['id']."'></div><div id='cnv".$q['id']."' class='cnv' style='height: 600px;'><div id='canvas".$q['id']."'></div><button class='btn btn-primary' id='confP".$q['id']."' onclick='saveCanvas(this)'>Potvrdit nakres</button></div><button class='btn btn-primary' id='confU".$q['id']."' onclick='saveFile(this)'>Odovzdat subor</button>";
             } else if($q['type'] == 'pair') {
                 echo "<div class='row m-2 align-items-center justify-content-between d-inline-flex w-100'><button class='btn btn-primary m-3 ml-4' id='pairQ".$q['id']."' onclick='generatePair(this)' >Vygeneruj parove otazky</button><div class='vysledok mr-5' style='font-size: 25px;' id='pairR".$q['id']."'></div></div>";
                 echo "<div class='jtk-demo-main mx-4 mt-3'><div id='pairCanvas".$q['id']."' style='height: 600px; width: 466px; position: relative'></div></div>";
@@ -94,47 +98,17 @@ if($test['state'] === 'disabled') {
                 "</div>
                 </div>";
 
+            } else if($q['type'] == 'answer'){
+                echo "
+                <div class='vysledok' id='answR".$q['id']."'></div>'
+                <div class='mb-3 ml-4'>
+                    <input id='".$q['id']."' type='text' onblur='checkShort(this)' class=''>
+                </div>";
             }
+
             $tem += 1;
         }
-        //generovanie otazok s otvorenou odpovedou a moznostami
-        $count = 1;
-        echo "<br><br><br>";
-        foreach($questions as $question){
-            if($question['type'] == 'answer'){
-                echo 
-                "<div class='mb-3'>
-                    <div class=''>
-                        <h4>".$count.".".$question['text']."</h4>
-                    </div>
-                    <div class=''>
-                        <input class=''></input>
-                    </div>
-                </div>";
-                $count++;
-            }
-            else if($question['type'] == 'options'){
-                $arrNumber = $count - 1;
-                $option = json_decode($questions[$arrNumber]['content'], true);
-                echo 
-                "<div class='mb-3'>
-                    <div class=''>
-                        <h4>".$count.". ".$question['text']."</h4>
-                    </div>
-                    <div class='form-check'>";
-                    for($i =1; $i <=4; $i++){  
-                        $optionNumber = 'option'.$i;                 
-                        echo 
-                        "<input type='checkbox' class='form-check-input' id='".$optionNumber."Check'></input>
-                        <label class='form-check-label' for='".$optionNumber."Check'>".$option[$optionNumber]."</label>
-                        <br>";
-                    }
-                echo
-                    "</div>
-                </div>";
-                $count++;
-            }
-        }
+
     ?>
 </div>
 <script type="text/javascript">
@@ -188,8 +162,39 @@ if($test['state'] === 'disabled') {
         return (!str || str.length === 0 );
     }
 
+    function checkShort(el) {
+        var lastChar = id.substring(5, id.length);
+        // TYMTO ZAPISES DO ELEMENTU VYSLEDOK
+        $('#answR'+lastChar.toString()).text("0/0");
+        //POKRACUJ TYM ZE SI GETNES CEZ AJAX TEN CONTENT A POROVNAJ SI HO S INPUT VALUE
+    }
+
+    function saveFile(el) {
+        let testId = $('#testId').text();
+        let userId = $('#ziakId').text();
+        let id = el.id;
+        var lastChar = id.substring(5, id.length);
+        var formData = new FormData();
+        formData.append('file', $('#fileQ'+lastChar)[0].files[0]);
+        formData.append('testId',testId);
+        formData.append('questionId',lastChar);
+        formData.append('userId',userId);
+        $.ajax({
+            url : 'downloadFile.php',
+            type : 'POST',
+            data : formData,
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,  // tell jQuery not to set contentType
+            success : function(data) {
+                console.log(data);
+                alert(data);
+            }
+        });
+    }
+
     function submitTest() {
         let testId = $('#testId').text();
+        let userId = $('#ziakId').text();
         $(".vysledok").each(function() {
             let id = $(this).attr('id');
             var lastChar = id.substring(5, id.length);
@@ -200,7 +205,7 @@ if($test['state'] === 'disabled') {
                     url: "saveQuestionResult.php",
                     data: {
                         questionId: lastChar,
-                        userId: 1,
+                        userId: userId,
                         testId: testId,
                         content: content
                     }
@@ -270,6 +275,7 @@ if($test['state'] === 'disabled') {
 
     function saveCanvas(el) {
         let testId = $('#testId').text();
+        let userId = $('#ziakId').text();
         let id = el.id;
         var lastChar = id.substring(5, id.length);
         var canvas = document.getElementById('canvas'+lastChar);
@@ -279,8 +285,8 @@ if($test['state'] === 'disabled') {
             type: "POST",
             url: "downloadFile.php",
             data: {
-                questionId: lastChar,
-                userId: 1,
+                questionId: parseInt(lastChar),
+                userId: userId,
                 testId: testId,
                 imgBase64: dataURL
             }

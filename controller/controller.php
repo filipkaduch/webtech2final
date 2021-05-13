@@ -53,6 +53,28 @@ class Controller {
         return $stmt3->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getStudent($userId) {
+        $stmt3 = $this->conn->prepare("SELECT * FROM users WHERE id=? ");
+        $stmt3->bindValue(1, $userId);
+        $stmt3->execute();
+        return $stmt3->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getQuestionById($id) {
+        $stmt3 = $this->conn->prepare("SELECT * FROM questions WHERE id=? ");
+        $stmt3->bindValue(1, $id);
+        $stmt3->execute();
+        return $stmt3->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getStudentAnswers($testId, $userId) {
+        $stmt3 = $this->conn->prepare("SELECT * FROM answers WHERE user_id=? and test_id=? and handed=1");
+        $stmt3->bindValue(1, $userId);
+        $stmt3->bindValue(2, $testId);
+        $stmt3->execute();
+        return $stmt3->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function savePaintQuestion($testId, $name, $text, $content = "") {
         $type = 'paint';
         $stmt = $this->conn->prepare('INSERT INTO questions (test_id, name, type, text, content) VALUES(:test_id, :name, :type, :text, :content)');

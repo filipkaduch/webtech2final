@@ -312,6 +312,8 @@ $questions = $controller->getTestQuestions($newId);
 <script type="text/javascript">
 
     let i = 1;
+    let b = 2;
+    let pairContent = [];
 
 
 
@@ -404,6 +406,7 @@ $questions = $controller->getTestQuestions($newId);
             }
         });
     }
+
 
 
     function addPairQuestion() {
@@ -550,15 +553,13 @@ $questions = $controller->getTestQuestions($newId);
         jsPlumb.ready(function() {
             let bottom = i * 10;
             $('#canvas').append("<div class='window' id='"+"dragDropWindow"+i.toString()+"' style='position: relative; bottom: -"+bottom+"px'>"+key+"</div>");
-            $('#canvas').append("<div class='window' id='"+"dragDropWindow"+b.toString()+"' style='position: relative; right: -400px; bottom: -"+bottom+"px'>"+value+"</div>");
+            $('#canvas').append("<div class='window' id='"+"dragDropWindow"+(i+1).toString()+"' style='position: relative; right: -400px; bottom: -"+bottom+"px'>"+value+"</div>");
             pairContent.push({key: key, value: value});
             var instance = jsPlumb.getInstance({
                 DragOptions: { cursor: 'pointer', zIndex: 2000 },
                 PaintStyle: { stroke: '#666' },
                 EndpointHoverStyle: { fill: "orange" },
                 HoverPaintStyle: { stroke: "orange" },
-                isSource:true,
-                isTarget:true,
                 EndpointStyle: { width: 20, height: 16, stroke: '#666' },
                 Endpoint: "Rectangle",
                 Container: "canvas"
@@ -596,7 +597,7 @@ $questions = $controller->getTestQuestions($newId);
             var window3Endpoint = jsPlumb.addEndpoint('dragDropWindow1', { anchor:"Top" }, endpointOptions );
             var window4Endpoint = jsPlumb.addEndpoint('dragDropWindow2', { anchor:"BottomCenter" }, endpointOptions );*/
         });
-        b+=2;
+        b += 2;
         i+=2;
     }
 

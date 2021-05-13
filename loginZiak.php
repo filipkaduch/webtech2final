@@ -57,8 +57,9 @@ if (isset($_POST['login'])) {
                     $sql = "INSERT INTO users (token, firstname, surname, test_id) VALUES (?,?,?,?)";
                     $stm = $conn->prepare($sql);
                     $stm->execute([$token, $firstname, $surname, $result['id']]);
+                    $ziak_id = $conn->lastInsertId();
                     $_SESSION['user_login'] = $_POST['firstname'];
-                    $_SESSION['ziak_id'] = $result['id'];
+                    $_SESSION['ziak_id'] = $ziak_id;
                     //doplniť presmerovanie na stránku učiteľa
                     header("location: https://wt70.fei.stuba.sk/webtech-final/indexZiak.php");
 
