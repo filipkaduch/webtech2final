@@ -58,6 +58,7 @@ if (isset($_POST['login'])) {
                     $stm = $conn->prepare($sql);
                     $stm->execute([$token, $firstname, $surname, $result['id']]);
                     $_SESSION['user_login'] = $_POST['firstname'];
+                    $_SESSION['ziak_id'] = $result['id'];
                     //doplniť presmerovanie na stránku učiteľa
                     header("location: https://wt70.fei.stuba.sk/webtech-final/indexZiak.php");
 

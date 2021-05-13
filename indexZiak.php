@@ -3,9 +3,12 @@
 require_once "controller/controller.php";
 $controller = new Controller();
 
-
-$questions = $controller->getTestQuestions(96);
-$test = $controller->getTest(96);
+session_start();
+if(isset($_SESSION['ziak_id'])) {
+    $testId = $controller->getTestIdFromUser($_SESSION['ziak_id']);
+    $questions = $controller->getTestQuestions($testId);
+    $test = $controller->getTest($testId);
+}
 
 
 ?>

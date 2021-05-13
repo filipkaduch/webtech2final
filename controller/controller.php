@@ -116,18 +116,26 @@ class Controller {
         return $this->conn->lastInsertId();
     }
 
-    public function saveTest($testId, $name, $startTime, $time) {
+    public function saveTest($testId, $name, $startTime, $time, $ucitelId) {
         $state = 'disabled';
         $token = "".time().uniqid(rand());
-        $stmt = $this->conn->prepare('UPDATE tests SET name=?, state=?, startTime=?, time=?, token=? WHERE id=?');
+        $stmt = $this->conn->prepare('UPDATE tests SET name=?, state=?, startTime=?, time=?, token=?, ucitel_id=? WHERE id=?');
         $stmt->bindValue(1, $name);
         $stmt->bindValue(2, $state);
         $stmt->bindValue(3, $startTime);
         $stmt->bindValue(4, $time);
-        $stmt->bindValue(6, $testId);
+        $stmt->bindValue(7, $testId);
         $stmt->bindValue(5, $token);
+        $stmt->bindValue(6, $ucitelId);
         $stmt->execute();
         return $this->conn->lastInsertId();
+    }
+
+    public function getTestIdFromUser($id) {
+        $stmt7 = $this->conn->prepare("SELECT test_id FROM users WHERE id=?");
+        $stmt7->bindValue(1, $id);
+        $stmt7->execute();
+        return $stmt7->fetch(PDO::FETCH_ASSOC);
     }
 
     public function deleteQuestion($id) {
@@ -151,6 +159,13 @@ class Controller {
 
     public function getTests() {
         $stmt7 = $this->conn->prepare("SELECT * FROM tests");
+        $stmt7->execute();
+        return $stmt7->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTestsByUcitelId($id) {
+        $stmt7 = $this->conn->prepare("SELECT * FROM tests WHERE ucitel_id=?");
+        $stmt7->bindValue(1, $id);
         $stmt7->execute();
         return $stmt7->fetchAll(PDO::FETCH_ASSOC);
     }

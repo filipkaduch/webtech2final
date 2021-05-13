@@ -2,8 +2,12 @@
 
 require_once "controller/controller.php";
 $controller = new Controller();
+session_start();
 
-$tests = $controller->getTests();
+if(isset($_SESSION['ucitel_id'])) {
+    $ucitelId = $_SESSION['ucitel_id'];
+    $tests = $controller->getTestsByUcitelId($ucitelId);
+}
 
 ?>
 <html lang="sk">

@@ -53,9 +53,9 @@ if (isset($_POST['login'])) {
             } else {
                 if ($password ==$result['password']) {
                     $_SESSION['user_login'] = $_POST['username'];
+                    $_SESSION['ucitel_id'] = $result['id'];
                     //doplniť presmerovanie na stránku učiteľa
                     header("location: https://wt70.fei.stuba.sk/webtech-final/index.php");
-                    echo "<div class=" . "'p-3 mb-2 bg-secondary text-white'>Prihlásený úžívateľ: " . $_SESSION['user_login'] . "</div>";
                 } else {
                     echo "<div class=" . "'alert alert-danger'" . " role= alert" . ">Nesprávne meno alebo heslo!</div>";
                 }
