@@ -7,6 +7,7 @@ session_start();
 
 $ziakId = 0;
 if(isset($_SESSION['ziak_id'])) {
+    $userId = $_SESSION['ziak_id'];
     $testId = $controller->getTestIdFromUser(intval($_SESSION['ziak_id']));
     $questions = $controller->getTestQuestions($testId['test_id']);
     $test = $controller->getTest($testId['test_id']);
@@ -403,15 +404,21 @@ if($test['state'] === 'disabled') {
                         });
                         let bot = 1;
                         let iter = 0;
-                        for(let i = 0; i < keys.length; i+=2) {
-                            let bottom = bot * 10;
-                            $('#'+test).append("<div class='window' id='"+"dragDropWindow"+i.toString()+"' style='position: absolute; top: -"+bottom+"px'>"+"<p class='m-2'>"+keys[iter].key+"</p></div>");
-                            $('#'+test).append("<div class='window' id='"+"dragDropWindow"+(i+1).toString()+"' style='position: absolute; right: -400px; top: -"+bottom+"px'>"+"<p class='m-2'>"+keys[iter].value+"</p></div>");
+
+                        for(let i = 0; i < keys.length; i++) {
+                            let bottom = bot * 80;
+                            $('#'+test).append("<div class='window' id='"+"dragDropWindow"+(i).toString()+"' style='position: absolute; top: "+bottom+"px'>"+"<p class='m-2'>"+keys[i].key+"</p></div>");
                             jsPlumb.addEndpoint('dragDropWindow'+i.toString(), { anchor:"Right" }, endpointSourceOptions );
-                            jsPlumb.addEndpoint('dragDropWindow'+(i+1).toString(), { anchor:"Left" }, endpointTargetOptions );
-                            iter++;
                             bot++;
                         }
+                        bot = 1;
+                        for(let i = keys.length -1; i >= 0; i--) {
+                            let bottom = bot * 80;
+                            $('#'+test).append("<div class='window' id='"+"dragDropTargetWindow"+(bot).toString()+"' style='position: absolute; right: -400px; top: "+bottom+"px'>"+"<p class='m-2'>"+keys[i].value+"</p></div>");
+                            jsPlumb.addEndpoint('dragDropTargetWindow'+(bot).toString(), { anchor:"Left" }, endpointTargetOptions );
+                            bot++;
+                        }
+
                     }
                     else {
                         console.log(obj.error);
