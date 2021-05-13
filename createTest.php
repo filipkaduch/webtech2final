@@ -51,7 +51,7 @@ $questions = $controller->getTestQuestions($newId);
             <div class="form-group" style="display: contents;">
                 <label for="testName">Nazov testu: </label>
                 <input type="text" class="form-control" id="testName" name="testName">
-                <label for="time">Trvanie testu: </label>
+                <label for="time">Trvanie testu (v minutach): </label>
                 <input type="number" class="form-control" name="time" id="time" min="5" max="180" step="5">
                 <label for="startTimeDate">Start testu datum: </label>
                 <input type="date" class="form-control" id="startTimeDate" name="startTimeDate">
@@ -299,15 +299,9 @@ $questions = $controller->getTestQuestions($newId);
 
 <script type="text/javascript">
 
-    let stage = new Konva.Stage({
-        container: 'container',
-        width: 460,
-        height: 300,
-    });
-
     let i = 1;
 
-    let layer = new Konva.Layer();
+
 
     //otvorena odpoved
     function addAnswerQuestion() {
@@ -399,15 +393,15 @@ $questions = $controller->getTestQuestions($newId);
         });
     }
 
+
     function addPairQuestion() {
         $('#myModal2').modal('hide');
         let id = $('#testId').text();
         let text = $('#questionText2').val();
         let questionName = $('#questionName2').val();
-        let json = stage.toJSON();
-        let myJSON = JSON.stringify(json);
-        console.log(myJSON);
-        //let contents = $('#contents').text();
+
+        let myJSON = JSON.stringify(pairContent);
+
         jQuery.ajax({
             type: "POST",
             url: 'savePairQuestion.php',
@@ -416,7 +410,6 @@ $questions = $controller->getTestQuestions($newId);
 
             success: function (obj, textstatus) {
                 if( !('error' in obj) ) {
-                    console.log(obj);
                     $('#tableBody').text('');
                     for(let i = 0; i < obj.length; i++) {
                         $('#tableBody').append('<tr><th>' + obj[i].id + '</th><th>'+obj[i].name+ '</th><th>' + obj[i].type + '</th><th><button class=\'btn btn-warning\' onclick=\'deleteQuestion('+obj[i].id+')\'>Zmazat</button>');
@@ -546,59 +539,40 @@ $questions = $controller->getTestQuestions($newId);
         let key = $('#key').val();
         let value = $('#value').val();
 
-        let rectangleKey = new Konva.Group({
-            x: i*25,
-            y: i*25,
-            width: 130,
-            height: 25,
-            draggable: true,
-            stroke: 'black',
-            strokeWidth: 2,
+        jsPlumb.ready(function() {
+            let bottom = i * 10;
+            $('#canvas').append("<div class='window' id='"+"dragDropWindow"+i.toString()+"' style='position: relative; bottom: -"+bottom+"px'>"+key+"</div>");
+            $('#canvas').append("<div class='window' id='"+"dragDropWindow"+b.toString()+"' style='position: relative; right: -400px; bottom: -"+bottom+"px'>"+value+"</div>");
+            pairContent.push({key: key, value: value});
+            var instance = jsPlumb.getInstance({
+                DragOptions: { cursor: 'pointer', zIndex: 2000 },
+                PaintStyle: { stroke: '#666' },
+                EndpointHoverStyle: { fill: "orange" },
+                HoverPaintStyle: { stroke: "orange" },
+                isSource:true,
+                isTarget:true,
+                EndpointStyle: { width: 20, height: 16, stroke: '#666' },
+                Endpoint: "Rectangle",
+                Container: "canvas"
+            });
+            var endpointSourceOptions = { endpoint:["Rectangle",{ width:10, height:10, position: 'relative'}], isSource:true,  beforeDrop: function (params) {
+                    return confirm("Spojit " + params.sourceId + " s " + params.targetId + "? Potvrdenim sa uz nemozete vratit spat.");
+                }
+            };
+            var endpointTargetOptions = { endpoint:["Rectangle",{ width:10, height:10, position: 'relative'}], isTarget:true,  beforeDrop: function (params) {
+                    return confirm("Spojit " + params.sourceId + " s " + params.targetId + "? Potvrdenim sa uz nemozete vratit spat.");
+                }
+            };
+            var window3Endpoint = jsPlumb.addEndpoint('dragDropWindow'+i.toString(), { anchor:"Right" }, endpointSourceOptions );
+            var window4Endpoint = jsPlumb.addEndpoint('dragDropWindow'+b.toString(), { anchor:"Left" }, endpointTargetOptions );
+            instance.importDefaults({
+                Connector : [ "Bezier", { curviness: 35 } ],
+                Anchors : [ "Top" ]
+            });
+            
         });
-
-        rectangleKey.add(new Konva.Rect({
-            width: 130,
-            height: 25,
-            fill: 'lightblue'
-        }));
-        rectangleKey.add(new Konva.Text({
-            text:key,
-            fontSize: 18,
-            fontFamily: 'Calibri',
-            fill: '#000',
-            width: 130,
-            padding: 5,
-            align: 'center'
-        }));
-
-        let rectangleValue = new Konva.Group({
-            x: 25,
-            y: 25,
-            width: 130,
-            height: 25,
-            draggable: true,
-            stroke: 'black',
-            strokeWidth: 2,
-        });
-
-        rectangleValue.add(new Konva.Rect({
-            width: 130,
-            height: 25,
-            fill: 'blue'
-        }));
-        rectangleValue.add(new Konva.Text({
-            text:value,
-            fontSize: 18,
-            fontFamily: 'Calibri',
-            fill: '#000',
-            width: 130,
-            padding: 5,
-            align: 'center'
-        }));
-        layer.add(rectangleKey);
-        layer.add(rectangleValue);
-        stage.add(layer);
-        i++;
+        b+=2;
+        i+=2;
     }
 
 </script>

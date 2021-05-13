@@ -6,10 +6,10 @@ require_once "controller/controller.php";
 $controller = new Controller();
 $aResult = array();
 
-if( !isset($_POST['id']) ) { $aResult['error'] = 'No  arguments!'; }
+if( !isset($_POST['testId']) ) { $aResult['error'] = 'No  arguments!'; }
 
 if( !isset($aResult['error']) ) {
-    $controller->getTestQuestions($_POST['id']);
+    $controller->submitAnswers($_POST['userId'], $_POST['testId']);
 
 }
 
