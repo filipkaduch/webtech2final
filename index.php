@@ -44,7 +44,12 @@ $tests = $controller->getTests();
                 echo "<div class='row m-4'>";
             }
 
-            echo "<div class='col-4 p-4 bg-white border'><h3>Nazov: ".$t['name']."</h3><br><h4>Zaciatok: ".$t['startTime']."</h4><br><h4>Trvanie: ".$t['time']."</h4><br>Stav: ".$t['state']."<br><button class='btn btn-warning btn-block' id='".$t['id']."' onclick='setActive(this.id)'>Aktivuj/Deaktivuj</button><br><button class='btn btn-warning btn-block' id='".$t['id']."' onclick='deleteTest(this.id)'>Zmazat</button> </div>";
+            echo "<div class='col-4 p-4 bg-white border'><h3>Nazov: ".$t['name']."</h3><br><h4>Zaciatok: ".$t['startTime']."</h4><br>
+            <h4>Trvanie: ".$t['time']."</h4><br>Stav: ".$t['state']."<br>
+            <button class='btn btn-warning btn-block' id='".$t['id']."' onclick='setActive(this.id)'>Aktivuj/Deaktivuj</button><br>
+            <button class='btn btn-warning btn-block' id='".$t['id']."' onclick='deleteTest(this.id)'>Zmazat</button>
+            <a class='btn btn-warning btn-block mt-4' href='trackTest.php?id=".$t['id']."' role='button'>Sledovat</a>
+            </div>";
             if($count % 3 == 2) {
                 echo "</div>";
             }

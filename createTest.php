@@ -1,7 +1,9 @@
 
 <?php
 
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 require_once "controller/controller.php";
 $controller = new Controller();
@@ -20,8 +22,6 @@ $questions = $controller->getTestQuestions($newId);
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/konva@7.2.5/konva.min.js"></script>
-    <script src="node_modules/@jsplumb/core/js/jsplumb.core.umd.js"></script>
-    <script src="node_modules/@jsplumb/browser-ui/js/jsplumb.browser-ui.umd.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>WEBTECH2 - final</title>
 </head>
@@ -65,6 +65,12 @@ $questions = $controller->getTestQuestions($newId);
         </div>
         <div class="col-6">
             <div class="row m-2">
+                <button type="button" class="btn btn-secondary mr-1" onclick="showModal('myModalAnswer')">Pridat otazku s otvorenou odpovdeou +</button>
+            </div>
+            <div class="row m-2">
+                <button type="button" class="btn btn-secondary mr-1" onclick="showModal('myModalOptions')">Pridat otazku s moznostami +</button>
+            </div>
+            <div class="row m-2">
                 <button type="button" class="btn btn-secondary mr-1" onclick="showModal('myModal')">Pridat kresliacu otazku +</button>
             </div>
             <div class="row m-2">
@@ -88,6 +94,127 @@ $questions = $controller->getTestQuestions($newId);
             ?>
             </tbody>
         </table>
+    </div>
+</div>
+
+<!-- modal pre otazku s otvorenou odpovedou -->
+<div id="myModalAnswer" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="name" class="modal-title">Pridanie otazky s otvorenou odpovedou</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    Nazov otazky: <input type="text" class="form-control" id='questionName3' name="questionName3">
+                </div>
+                <div class="form-group">
+                    Zadanie: <input type="textarea" class="form-control" name="questionText3" id='questionText3'>
+                </div>
+                <div class="form-group">
+                    Spravna odpoved: <input type="text" class="form-control" id="answer" name="answer">
+                </div>
+                <button class="btn btn-primary" type="button" name="submit" onclick="addAnswer()">Pridat odpoved +</button>
+                <!-- <div id="container"></div> -->
+                <?php 
+                // $answers = $controller->getAnswers($questionID); 
+                ?>
+                <div class="mt-2">
+                    <table class="">
+                        <thead class="">
+                            <th>Spravne odpovede:</th>
+                        </thead>
+                        <tbody id="tableAnswers">
+                        <?php
+                        // foreach($answers as $row) {
+                        //     echo "<tr><th>".$row["answer"]."</th></tr>";
+                        // }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" name="submit" onclick="addAnswerQuestion()">Ulozit otazku</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal pre otazku s moznostami -->
+<div id="myModalOptions" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="name" class="modal-title">Pridanie otazky s moznostami</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    Nazov otazky: <input type="text" class="form-control" id='questionName4' name="questionName4">
+                </div>
+                <div class="form-group">
+                    Zadanie: <input type="textarea" class="form-control" name="questionText4" id='questionText4'>
+                </div>
+                <h5>Moznosti</h5>
+                <div class="form-group row">
+                    <label for="option1" class="col-sm-2 col-form-label">a)</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="option1" name="option1">
+                        <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="option1Check">
+                        <label class="form-check-label" for="option1Check">
+                            Oznacit za spravnu
+                        </label>
+                    </div>
+                    </div>
+                    
+                </div>
+                <div class="form-group row">
+                    <label for="option2" class="col-sm-2 col-form-label">b)</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="option2" name="option2">
+                        <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="option2Check">
+                        <label class="form-check-label" for="option2Check">
+                            Oznacit za spravnu
+                        </label>
+                    </div>
+                    </div>
+                    
+                </div>
+                <div class="form-group row">
+                    <label for="option3" class="col-sm-2 col-form-label">c)</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="option3" name="option3">
+                        <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="option3Check">
+                        <label class="form-check-label" for="option3Check">
+                            Oznacit za spravnu
+                        </label>
+                    </div>
+                    </div>
+                    
+                </div>
+                <div class="form-group row">
+                    <label for="option4" class="col-sm-2 col-form-label">d)</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="option4" name="option4">
+                        <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="option4Check">
+                        <label class="form-check-label" for="option4Check">
+                            Oznacit za spravnu
+                        </label>
+                    </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" name="submit" onclick="addOptionsQuestion()">Ulozit otazku</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -134,10 +261,7 @@ $questions = $controller->getTestQuestions($newId);
                     Hodnota: <input type="text" class="form-control" id="value" name="value">
                 </div>
                 <button class="btn btn-primary" type="button" name="submit" onclick="addPair()">Pridat par +</button>
-                <div class="jtk-demo-main">
-                    <div class="" id="canvas" style="height: 600px;">
-                    </div>
-                </div>
+                <div id="container"></div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" type="button" name="submit" onclick="addPairQuestion()">Ulozit otazku</button>
@@ -154,7 +278,6 @@ $questions = $controller->getTestQuestions($newId);
 </div>
 
 <script src="script/script.js"></script>
-<script src="script/jsplumb.js"></script>
 
 </body>
 
@@ -171,26 +294,112 @@ $questions = $controller->getTestQuestions($newId);
         justify-content: center;
         padding: 30px;
     }
-
-    .window {
-        height: 40px;
-        width: 40px;
-        border: 2px solid black;
-    }
 </style>
 
 
 <script type="text/javascript">
 
     let i = 1;
-    let b = 2;
-    let pairContent = [];
+
+
+
+    //otvorena odpoved
+    function addAnswerQuestion() {
+        $('#myModalAnswer').modal('hide');
+        let id = $('#testId').text();
+        let text = $('#questionText3').val();
+        let questionName = $('#questionName3').val();
+        let answer = $('#answer').val();
+        jQuery.ajax({
+            type: "POST",
+            url: 'saveAnswerQuestion.php',
+            dataType: 'json',
+            data: {testId: id, name: questionName, text: text, content: answer},
+
+            success: function (obj, textstatus) {
+                if( !('error' in obj) ) {
+                    console.log(obj);
+                    $('#tableBody').text('');
+                    for(let i = 0; i < obj.length; i++) {
+                        $('#tableBody').append('<tr><th>' + obj[i].id + '</th><th>'+obj[i].name+ '</th><th>' + obj[i].type + '</th><th><button class=\'btn btn-warning\' onclick=\'deleteQuestion('+obj[i].id+')\'>Zmazat</button>');
+                    }
+                }
+                else {
+                    console.log(obj.error);
+                }
+            }
+        });
+    }
+
+    //pridat odpoved - nefunguje tak som jebal na to
+    function addAnswer() {
+        let id = $('#testId').text();
+        let answer = $('#answer').val();
+        jQuery.ajax({
+            type: "POST",
+            url: 'saveAnswer.php',
+            dataType: 'json',
+            data: {testId: id, content: answer},
+
+            success: function (obj, textstatus) {
+                if( !('error' in obj) ) {
+                    console.log(obj);
+                    $('#tableAnswers').text('');
+                    $('#tableAnswers').append('<tr><th>' + obj[i].answer + '</th></tr>');
+                }
+                else {
+                    console.log(obj.error);
+                }
+            }
+        });
+    }
+
+    //otazka s moznostami
+    function addOptionsQuestion() {
+        $('#myModalOptions').modal('hide');
+        let id = $('#testId').text();
+        let text = $('#questionText4').val();
+        let questionName = $('#questionName4').val();
+        let option1 = $('#option1').val();
+        let option1Check = $('#option1Check').is(":checked");
+        let option2 = $('#option2').val();
+        let option2Check = $('#option2Check').is(":checked");
+        let option3 = $('#option3').val();
+        let option3Check = $('#option3Check').is(":checked");
+        let option4 = $('#option4').val();
+        let option4Check = $('#option4Check').is(":checked");
+        let json = {option1:option1, option1Check:option1Check, option2:option2, option2Check:option2Check,
+             option3:option3, option3Check:option3Check, option4:option4, option4Check:option4Check};
+        let myJSON = JSON.stringify(json);
+        console.log(myJSON);
+        jQuery.ajax({
+            type: "POST",
+            url: 'saveOptionsQuestion.php',
+            dataType: 'json',
+            data: {testId: id, name: questionName, text: text, content: myJSON},
+
+            success: function (obj, textstatus) {
+                if( !('error' in obj) ) {
+                    console.log(obj);
+                    $('#tableBody').text('');
+                    for(let i = 0; i < obj.length; i++) {
+                        $('#tableBody').append('<tr><th>' + obj[i].id + '</th><th>'+obj[i].name+ '</th><th>' + obj[i].type + '</th><th><button class=\'btn btn-warning\' onclick=\'deleteQuestion('+obj[i].id+')\'>Zmazat</button>');
+                    }
+                }
+                else {
+                    console.log(obj.error);
+                }
+            }
+        });
+    }
+
 
     function addPairQuestion() {
         $('#myModal2').modal('hide');
         let id = $('#testId').text();
         let text = $('#questionText2').val();
         let questionName = $('#questionName2').val();
+
         let myJSON = JSON.stringify(pairContent);
 
         jQuery.ajax({
@@ -200,7 +409,6 @@ $questions = $controller->getTestQuestions($newId);
             data: {testId: id, name: questionName, text: text, content: myJSON},
 
             success: function (obj, textstatus) {
-                console.log(obj);
                 if( !('error' in obj) ) {
                     $('#tableBody').text('');
                     for(let i = 0; i < obj.length; i++) {
@@ -219,6 +427,9 @@ $questions = $controller->getTestQuestions($newId);
         let id = $('#testId').text();
         let text = $('#questionText').val();
         let questionName = $('#questionName').val();
+        console.log(questionName);
+        console.log(text);
+        console.log(id);
         let contents = $('#contents').text();
         jQuery.ajax({
             type: "POST",
@@ -248,7 +459,7 @@ $questions = $controller->getTestQuestions($newId);
         let startTime = $('#startTime').val();
         let startTimeDate = $('#startTimeDate').val();
         let id = $('#testId').text();
-        //let contents = JSON.stringify(pairContent);
+        let contents = $('#contents').text();
         jQuery.ajax({
             type: "POST",
             url: 'saveTest.php',
@@ -307,12 +518,20 @@ $questions = $controller->getTestQuestions($newId);
     }
 
     function showModal(a) {
+        stage.clear();
         $('#key').val('');
         $('#value').val('');
         $('#questionText').val();
         $('#questionName').val();
         $('#questionText2').val();
         $('#questionName2').val();
+        //
+        $('#answer').val('');
+        $('#questionText3').val();
+        $('#questionName3').val();
+        $('#questionText4').val();
+        $('#questionName4').val();
+        //
         $('#'+a).modal('show');
     }
 
@@ -350,32 +569,10 @@ $questions = $controller->getTestQuestions($newId);
                 Connector : [ "Bezier", { curviness: 35 } ],
                 Anchors : [ "Top" ]
             });
-
-            /*jsPlumb.connect({
-                source:window3Endpoint,
-                target:window4Endpoint,
-                connector: [ "Bezier", { curviness:35 } ],
-                paintStyle:{ strokeWidth:10, stroke:'yellow' }
-            });*/
-
-
-/*
-            var endpointOptions = {
-                connector : "Straight",
-                connectorStyle: { strokeWidth:20, stroke:'blue' },
-                scope:"blueline",
-                dragAllowedWhenFull:false
-            };
-            var window3Endpoint = jsPlumb.addEndpoint('dragDropWindow1', { anchor:"Top" }, endpointOptions );
-            var window4Endpoint = jsPlumb.addEndpoint('dragDropWindow2', { anchor:"BottomCenter" }, endpointOptions );*/
+            
         });
         b+=2;
         i+=2;
     }
-
-
-
-
-
 
 </script>

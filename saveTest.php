@@ -7,6 +7,7 @@ $controller = new Controller();
 $aResult = array();
 
 if( !isset($_POST['id']) ) { $aResult['error'] = 'No  arguments!'; }
+
 if( !isset($aResult['error']) ) {
     $startTimeDate = $_POST['startTimeDate'];
     $startTime = $_POST['startTime'];

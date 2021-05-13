@@ -3,8 +3,10 @@
 require_once "controller/controller.php";
 $controller = new Controller();
 
+
 $questions = $controller->getTestQuestions(1);
 $test = $controller->getTest(1);
+
 
 ?>
 <html lang="sk">
@@ -73,6 +75,44 @@ if($test['state'] === 'disabled') {
                 echo "<div class='jtk-demo-main mx-4 mt-3'><div id='pairCanvas".$q['id']."' style='height: 600px; width: 466px; position: relative'></div></div>";
             }
             $tem += 1;
+        }
+        //generovanie otazok s otvorenou odpovedou a moznostami
+        $count = 1;
+        echo "<br><br><br>";
+        foreach($questions as $question){
+            if($question['type'] == 'answer'){
+                echo 
+                "<div class='mb-3'>
+                    <div class=''>
+                        <h4>".$count.". ".$question['text']."</h4>
+                    </div>
+                    <div class=''>
+                        <input class=''></input>
+                    </div>
+                </div>";
+                $count++;
+            }
+            else if($question['type'] == 'options'){
+                $arrNumber = $count - 1;
+                $option = json_decode($questions[$arrNumber]['content'], true);
+                echo 
+                "<div class='mb-3'>
+                    <div class=''>
+                        <h4>".$count.". ".$question['text']."</h4>
+                    </div>
+                    <div class='form-check'>";
+                    for($i =1; $i <=4; $i++){  
+                        $optionNumber = 'option'.$i;                 
+                        echo 
+                        "<input type='checkbox' class='form-check-input' id='".$optionNumber."Check'></input>
+                        <label class='form-check-label' for='".$optionNumber."Check'>".$option[$optionNumber]."</label>
+                        <br>";
+                    }
+                echo
+                    "</div>
+                </div>";
+                $count++;
+            }
         }
     ?>
 </div>
