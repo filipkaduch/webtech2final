@@ -285,6 +285,10 @@ $questions = $controller->getTestQuestions($newId);
 <script src="script/script.js"></script>
 <script src="script/jsplumb.js"></script>
 
+<br>
+<button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
+<br>
+
 </body>
 
 

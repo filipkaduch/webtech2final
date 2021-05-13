@@ -65,7 +65,9 @@ $test = $controller->getTest($testId);
 
 
 <script src="script/script.js"></script>
-
+<br>
+<button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
+<br>
 </body>
 
 </html>
