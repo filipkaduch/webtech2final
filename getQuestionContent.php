@@ -9,8 +9,6 @@ $aResult = array();
 if( !isset($_POST['id']) ) { $aResult['error'] = 'No  arguments!'; }
 
 if( !isset($aResult['error']) ) {
-    $controller->getTestQuestions($_POST['id']);
-
+    $content = $controller->getQuestionContent($_POST['id']);
+    echo json_encode($content);
 }
-
-echo json_encode($aResult);

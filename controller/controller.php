@@ -51,6 +51,39 @@ class Controller {
         return $stmt3->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getQuestionContent($questionId) {
+        $stmt3 = $this->conn->prepare("SELECT content FROM questions WHERE id=?");
+        $stmt3->bindValue(1, $questionId);
+        $stmt3->execute();
+        return $stmt3->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getTest($testId) {
+        $stmt8 = $this->conn->prepare("SELECT * FROM tests WHERE id=?");
+        $stmt8->bindValue(1, $testId);
+        $stmt8->execute();
+        return $stmt8->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function saveAnswer($testId, $userId, $questionId, $content) {
+        $handed = 0;
+        $stmt = $this->conn->prepare('INSERT INTO answers (question_id, test_id, user_id, content, handed) VALUES(:question_id, :test_id, :user_id, :content, :handed)');
+        $stmt->bindParam(':test_id', $testId);
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->bindParam(':question_id', $questionId);
+        $stmt->bindParam(':content', $content);
+        $stmt->bindParam(':handed', $handed);
+        $stmt->execute();
+    }
+
+    public function submitAnswers($userId, $testId) {
+        $stmt = $this->conn->prepare('UPDATE answers SET handed=1 WHERE user_id=? and test_id=?');
+        $stmt->bindValue(1, $userId);
+        $stmt->bindValue(2, $testId);
+        $stmt->execute();
+        return $this->conn->lastInsertId();
+    }
+
     public function saveTest($testId, $name, $startTime, $time) {
         $state = 'active';
         $stmt = $this->conn->prepare('UPDATE tests SET name=?, state=?, startTime=?, time=? WHERE id=?');

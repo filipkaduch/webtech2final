@@ -51,7 +51,7 @@ $questions = $controller->getTestQuestions($newId);
             <div class="form-group" style="display: contents;">
                 <label for="testName">Nazov testu: </label>
                 <input type="text" class="form-control" id="testName" name="testName">
-                <label for="time">Trvanie testu: </label>
+                <label for="time">Trvanie testu (v minutach): </label>
                 <input type="number" class="form-control" name="time" id="time" min="5" max="180" step="5">
                 <label for="startTimeDate">Start testu datum: </label>
                 <input type="date" class="form-control" id="startTimeDate" name="startTimeDate">
@@ -182,28 +182,17 @@ $questions = $controller->getTestQuestions($newId);
 
 <script type="text/javascript">
 
-    /* let stage = new Konva.Stage({
-        container: 'container',
-        width: 460,
-        height: 300,
-    }); */
-
-
     let i = 1;
     let b = 2;
     let pairContent = [];
-
-    /*let layer = new Konva.Layer();*/
 
     function addPairQuestion() {
         $('#myModal2').modal('hide');
         let id = $('#testId').text();
         let text = $('#questionText2').val();
         let questionName = $('#questionName2').val();
-        console.log(pairContent);
         let myJSON = JSON.stringify(pairContent);
-        console.log(myJSON);
-        //let contents = $('#contents').text();
+
         jQuery.ajax({
             type: "POST",
             url: 'savePairQuestion.php',
@@ -213,7 +202,6 @@ $questions = $controller->getTestQuestions($newId);
             success: function (obj, textstatus) {
                 console.log(obj);
                 if( !('error' in obj) ) {
-                    console.log(obj);
                     $('#tableBody').text('');
                     for(let i = 0; i < obj.length; i++) {
                         $('#tableBody').append('<tr><th>' + obj[i].id + '</th><th>'+obj[i].name+ '</th><th>' + obj[i].type + '</th><th><button class=\'btn btn-warning\' onclick=\'deleteQuestion('+obj[i].id+')\'>Zmazat</button>');
@@ -348,11 +336,16 @@ $questions = $controller->getTestQuestions($newId);
                 Endpoint: "Rectangle",
                 Container: "canvas"
             });
-            var endpointOptions = { endpoint:["Rectangle",{ width:20, height:20}], isSource:true, isTarget:true, reattach: true, beforeDrop: function (params) {
-                    return confirm("Connect " + params.sourceId + " to " + params.targetId + "?");
-                }};
-            var window3Endpoint = jsPlumb.addEndpoint('dragDropWindow'+i.toString(), { anchor:"Right" }, endpointOptions );
-            var window4Endpoint = jsPlumb.addEndpoint('dragDropWindow'+b.toString(), { anchor:"Left" }, endpointOptions );
+            var endpointSourceOptions = { endpoint:["Rectangle",{ width:10, height:10, position: 'relative'}], isSource:true,  beforeDrop: function (params) {
+                    return confirm("Spojit " + params.sourceId + " s " + params.targetId + "? Potvrdenim sa uz nemozete vratit spat.");
+                }
+            };
+            var endpointTargetOptions = { endpoint:["Rectangle",{ width:10, height:10, position: 'relative'}], isTarget:true,  beforeDrop: function (params) {
+                    return confirm("Spojit " + params.sourceId + " s " + params.targetId + "? Potvrdenim sa uz nemozete vratit spat.");
+                }
+            };
+            var window3Endpoint = jsPlumb.addEndpoint('dragDropWindow'+i.toString(), { anchor:"Right" }, endpointSourceOptions );
+            var window4Endpoint = jsPlumb.addEndpoint('dragDropWindow'+b.toString(), { anchor:"Left" }, endpointTargetOptions );
             instance.importDefaults({
                 Connector : [ "Bezier", { curviness: 35 } ],
                 Anchors : [ "Top" ]
