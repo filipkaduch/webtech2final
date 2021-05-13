@@ -18,7 +18,7 @@ if( !isset($aResult['error']) ) {
     $uniquesavename = time().uniqid(rand());
     $fileName = "../files/".$uniquesavename.".png";
     file_put_contents($fileName, $fileData);
-    $jsonString = "{path:".$fileName."}";
+    $jsonString = '{"path":"'.$_POST['content'].'"}';
     $controller->saveAnswer($_POST['testId'], $_POST['userId'], $_POST['questionId'], $jsonString);
 
 }
