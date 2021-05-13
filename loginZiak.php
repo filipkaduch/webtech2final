@@ -59,7 +59,7 @@ if (isset($_POST['login'])) {
                     $stm->execute([$token, $firstname, $surname]);
                     $_SESSION['user_login'] = $_POST['firstname'];
                     //doplniť presmerovanie na stránku učiteľa
-                    //header("location: https://wt19.fei.stuba.sk/zaver/test.php");
+                    header("location: https://wt70.fei.stuba.sk/webtech-final/indexZiak.php/.php");
                     echo "<div class=" . "'p-3 mb-2 bg-secondary text-white'>Prihlásený úžívateľ: " . $_SESSION['user_login'] . "</div>";
 
                 } else {
