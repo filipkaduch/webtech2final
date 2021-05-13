@@ -64,7 +64,7 @@ if (isset($_POST['login'])) {
 
         ?>
 
-        <form method="post" action="ucitel.php" name="signin-form">
+        <form method="post" action="uciteLogin.php" name="signin-form">
             <div class="form-element">
                 <label>Username:</label><br>
                 <input type="text" name="username" pattern="[a-zA-Z0-9]+" required />

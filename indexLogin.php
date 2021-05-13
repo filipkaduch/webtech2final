@@ -17,7 +17,7 @@
         <button class="btn btn-block bg-info my-3" onclick="location.href='loginZiak.php'">Žiak - prihlásenie</button>
     </div>
     <div class="row">
-        <button class="btn btn-block bg-info my-3" onclick="location.href='ucitel.php'">Učiteľ - prihlásenie</button>
+        <button class="btn btn-block bg-info my-3" onclick="location.href='ucitelLogin.php'">Učiteľ - prihlásenie</button>
     </div>
     <div class="row">
         <button class="btn btn-block bg-info my-3" onclick="location.href='register.php'">Učiteľ - registrácia</button>
