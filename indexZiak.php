@@ -44,7 +44,15 @@ if(isset($_SESSION['ziak_id'])) {
     <div class="container">
         <div class="row justify-content-center d-inline-flex my-5">
             <button type="button" class="btn btn-secondary mr-1" onclick="submitTest('createTest')">Odovzdat test</button>
-            <button type="button" id='startBtn' class="btn btn-secondary mr-1" onclick="showTest()">Spustit test</button>
+            <button type="button" id='startBtn' class="<?php
+
+            if($test['state'] === 'disabled') {
+                echo "d-none";
+            } else {
+                echo "d-block";
+            }
+
+            ?> btn btn-secondary mr-1" onclick="showTest()">Spustit test</button>
             <button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
             <br>
             <?php
