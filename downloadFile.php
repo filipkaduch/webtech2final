@@ -32,7 +32,7 @@ if( !isset($aResult['error']) && isset($_POST['imgBase64']) ) {
 
     echo json_encode($fileType);
     $fileContent = file_get_contents($_FILES['file']['tmp_name']);
-    if(move_uploaded_file($_FILES['file']['tmp_name'],  $destination . $fileName . ".png")) {
+    if(move_uploaded_file($_FILES['file']['tmp_name'],  $destination . $fileName)) {
         file_put_contents($fileName, $fileContent);
         $jsonString = '{"path":"'.$fileName.'"}';
         $controller->saveAnswer($testId, $userId, $questionId, $jsonString);

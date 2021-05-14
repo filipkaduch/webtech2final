@@ -230,7 +230,7 @@ if($test['state'] === 'disabled') {
             type: "POST",
             url: "saveAnswers.php",
             data: {
-                userId: 1,
+                userId: userId,
                 testId: testId
             }
         }).done(function(o) {
