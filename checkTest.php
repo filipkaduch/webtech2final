@@ -9,6 +9,7 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
     $answers = $controller->getStudentAnswers($_GET['testId'], $_GET['userId']);
     $user = $controller->getStudent($_GET['userId']);
 }
+// var_dump($answers);
 
 ?>
 
@@ -30,12 +31,16 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
     </div>
     <div class="row">
         <div class="row justify-content-center d-inline-flex my-5">
-            <button type="button" class="btn btn-secondary mr-1" onclick="show('index')">Späť</button>
+            <a class="btn btn-secondary mr-1" href="https://wt70.fei.stuba.sk/webtech-final/trackTest.php?id=<?php echo $_GET['testId']; ?>"
+             role="button">Späť</a>
         </div>
     </div>
     <div class="container rounded bg-white my-5 w-100" style="border: 2px solid black;">
         <?php
             $tem = 1;
+            //NAVRHUJEM PRICITAVAT BODY PRI KAZDEJ ODPOVEDI ALE AK JE TO PICOVINA PRI PAROVACICH OTAZKACH TAK MOZME TO ROBIT INAK
+            $points = 0;
+            $totalPoints = 0;
             foreach($answers as $an) {
                 $q = $controller->getQuestionById($an['question_id']);
                 echo "<div class='row m-4 d-block p-2 bg-info rounded'><h4>".$tem." Nazov otazky: ".$q['name']."</h4><h4>Typ: ".$q['type']."</h4><h4>Zadanie: ".$q['text']."</h4></div>";
@@ -45,6 +50,37 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
                 } else if($q['type'] == 'paint') {
                     $json = json_decode($an['content']);
                     echo "<img style='height:400px; margin-left:50px;' src='../files/".$json->path."' alt='img' />";
+                } else if($q['type'] == 'answer') {
+                    $totalPoints += 1;
+                    $correctAnswer = $q['content'];
+                    $studentAnswer = json_decode($an['content'])->result;
+                    if($correctAnswer == $studentAnswer){
+                        $points += 1;
+                        echo "<div class='row m-4'><h5 class='text-success'>1/1</h5></div>";
+                    } else echo "<div class='row m-4'><h5 class='text-danger'>0/1</h5></div>";
+                    echo "<div class='row m-4'><h5>Odpoved ziaka: ".$studentAnswer."</h5></div>";
+                    echo "<div class='row m-4'><h6>Spravna odpoved: ".$correctAnswer."</h6></div>";
+                } else if($q['type'] == 'options'){
+                    $totalPoints += 4;
+                    $studentAnswer = json_decode($an['content'])->result;
+                    $correctAnswer = json_decode($q['content']);
+                    $studentAnswer = str_replace(array( '[', ']' ), '', $studentAnswer);
+                    $studentAnswer = explode(",", $studentAnswer);
+                    $correct = 0;
+                    $incorrect = 0;
+                    for($i = 1; $i <= 4; $i++){
+                        $option = 'option'.$i.'Check';
+                        if($correctAnswer->$option == $studentAnswer[$i - 1]){
+                            $correct += 1;
+                        } else if($correctAnswer->$option != 1){
+                            if ($studentAnswer[$i - 1] == 'false') $correct += 1;
+                            else $incorrect += 0.5;
+                        }                       
+                    }
+                    $result = $correct - $incorrect;
+                    if($result > 2) echo "<div class='row m-4'><h5 class='text-success'>".$result."/4</h5></div>";
+                    else echo "<div class='row m-4'><h5 class='text-danger'>".$result."/4</h5></div>";
+                    $points += $result;
                 }
 
                 $tem += 1;

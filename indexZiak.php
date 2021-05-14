@@ -82,25 +82,28 @@ if($test['state'] === 'disabled') {
                 echo "<div class='row m-2 align-items-center justify-content-between d-inline-flex w-100'><button class='btn btn-primary m-3 ml-4' id='pairQ".$q['id']."' onclick='generatePair(this)' >Vygeneruj parove otazky</button><div class='vysledok mr-5' style='font-size: 25px;' id='pairR".$q['id']."'></div></div>";
                 echo "<div class='jtk-demo-main mx-4 mt-3'><div id='pairCanvas".$q['id']."' style='height: 600px; width: 466px; position: relative'></div></div>";
             } else if($q['type'] == 'options') {
-                $arrNumber = $cou - 1;
                 $option = json_decode($q['content'], true);
-                echo
-                    "<div class='row m-2 align-items-center justify-content-between d-inline-flex w-100'>
+                echo "
+                    <h6 class='ml-4'>Oznacte spravne moznosti a ulozte odpoved. Ak sa rozhodnete oznacit ine moznosti, nezabudnite opat ulozit odpoved!</h6>
+                    <div class='row ml-4'>
                     <div class='form-check'>";
                 for($i =1; $i <=4; $i++){
                     $optionNumber = 'option'.$i;
-                    echo
-                        "<input type='checkbox' class='form-check-input' id='".$optionNumber."Check'></input>
-                        <label class='form-check-label' for='".$optionNumber."Check'>".$option[$optionNumber]."</label>
-                        <br>";
+                    echo "
+                    <div class='vysledok'  style='display: none;' id='optsR".$q['id']."'></div>
+                    <input type='checkbox' class='form-check-input' value='' id='".$q['id']."".$optionNumber."Check'></input>
+                    <label class='form-check-label' for='".$q['id']."".$optionNumber."Check'>".$option[$optionNumber]."</label>
+                    <br>";
                 }
                 echo
                 "</div>
-                </div>";
+                </div>
+                <button id='".$q['id']."' onclick='saveOptions(this)' type='submit' class='btn btn-primary ml-4 mt-2'>Ulozit odpoved</button>";
 
-            } else if($q['type'] == 'answer'){
+            } else if($q['type'] == 'answer'){        
                 echo "
-                <div class='vysledok' id='answR".$q['id']."'></div>'
+                <h6 class='ml-4'>Napiste odpoved v pozadovanom tvare.</h6>
+                <div class='vysledok'  style='display: none;' id='answR".$q['id']."'></div>
                 <div class='mb-3 ml-4'>
                     <input id='".$q['id']."' type='text' onblur='checkShort(this)' class=''>
                 </div>";
@@ -113,18 +116,12 @@ if($test['state'] === 'disabled') {
 </div>
 <script type="text/javascript">
 
-
-
-
-
 </script>
-
 
 <script src="script/script.js"></script>
 <script src="script/jsplumb.js"></script>
 
 </body>
-
 
 </html>
 <style>
@@ -163,10 +160,35 @@ if($test['state'] === 'disabled') {
     }
 
     function checkShort(el) {
-        var lastChar = id.substring(5, id.length);
-        // TYMTO ZAPISES DO ELEMENTU VYSLEDOK
-        $('#answR'+lastChar.toString()).text("0/0");
-        //POKRACUJ TYM ZE SI GETNES CEZ AJAX TEN CONTENT A POROVNAJ SI HO S INPUT VALUE
+        let id = el.id;
+        // let questionID = id.substring(5, id.length);
+        let content = $('#'+id).val();
+        let testId = $('#testId').text();
+        $('#answR'+id).empty();
+        $('#answR'+id).text(content);
+        console.log(id);
+        console.log(content);
+
+    }
+
+    function saveOptions(el){
+        let id = el.id;
+        console.log(id);
+        let i;
+        let data = [];
+        for(i =1; i <= 4; i++){
+            let optionNumber = 'option'+i;
+            let checkboxID= id+optionNumber+'Check';
+            console.log(checkboxID);
+            let option = $('#'+checkboxID).is(":checked");
+            console.log(option);
+            data[i - 1] = option;
+        }
+        console.log(data);
+        let myJSON = JSON.stringify(data);
+        console.log(myJSON);
+        $('#optsR'+id).empty();
+        $('#optsR'+id).text(myJSON);
     }
 
     function saveFile(el) {
@@ -218,7 +240,7 @@ if($test['state'] === 'disabled') {
             type: "POST",
             url: "saveAnswers.php",
             data: {
-                userId: 1,
+                userId: userId,
                 testId: testId
             }
         }).done(function(o) {

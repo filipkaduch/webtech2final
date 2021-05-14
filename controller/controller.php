@@ -21,6 +21,14 @@ class Controller {
         return $stmt3->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    //studenti podla test ID
+    public function getUsers($testId) {
+        $stmt3 = $this->conn->prepare("SELECT * FROM users WHERE test_id=? ");
+        $stmt3->bindValue(1, $testId);
+        $stmt3->execute();
+        return $stmt3->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     //otvorena odpoved
     public function saveAnswerQuestion($testId, $name, $text, $content) {
         $type = 'answer';
