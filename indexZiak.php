@@ -6,6 +6,7 @@ $controller = new Controller();
 session_start();
 
 $ziakId = 0;
+$timerTime = 0;
 if(isset($_SESSION['ziak_id'])) {
     $userId = $_SESSION['ziak_id'];
     $testId = $controller->getTestIdFromUser(intval($_SESSION['ziak_id']));
@@ -13,6 +14,18 @@ if(isset($_SESSION['ziak_id'])) {
     $test = $controller->getTest($testId['test_id']);
     $user = $controller->getStudent($userId);
     $ziakId = $_SESSION['ziak_id'];
+    $timerTime = $test['time'];
+    if ($user[0]["started"] != null) {
+        $date = date_create($user[0]["started"]);
+        $dateTest = date_create();
+        $dt = $dateTest->format("Y-m-d H:i:s");
+        $dt2 = $date->format("Y-m-d H:i:s");
+        $timeLeft = $dateTest->diff($date);
+        $timerTime = $timerTime - $timeLeft->i;
+        if($timerTime < 0) {
+            $test['state'] = 'disabled';
+        }
+    }
 }
 
 
@@ -51,10 +64,14 @@ if(isset($_SESSION['ziak_id'])) {
             } else {
                 echo "d-block";
             }
-            ?> btn btn-secondary mr-1" onclick="showTest()">Spustit test</button>
+            ?> btn btn-secondary mr-1" onclick="showTest()" <?php
+                if($user[0]["started"] != null) {
+                    echo "disabled";
+                }
+            ?>>Spustit test</button>
             <br>
             <?php
-            echo "<div id='testTime' style='display: none;'>".$test['time']."</div>";
+            echo "<div id='testTime' style='display: none;'>".$timerTime."</div>";
             ?>
             <h4 id="countdown" class="ml-4 font-weight-bold"></h4>
         </div>
@@ -70,12 +87,21 @@ if(isset($_SESSION['ziak_id'])) {
 <?php
 echo "<div id='testId' style='display: none;'>".$test['id']."</div>";
 echo "<div id='ziakId' style='display: none;'>".$ziakId."</div>";
+echo "<div id='timeOrig' style='display: none;'>".$test['time']."</div>";
 if($test['state'] === 'disabled') {
     echo "<h4>TEST JE MOMENTALNE ZABLOKOVANY. ZACAT MA:".$test['startTime']."</h4>";
+} else if($test['state'] === 'disabled' && $timerTime < 0) {
+    echo "<h4>TEST JE MOMENTALNE ZABLOKOVANY. MALI STE NANHO CAS:".$test['time']." MINUT</h4>";
 }
 ?>
 </div>
-<div id='test' class="d-none container rounded bg-white mb-5 w-100" style="min-height: 1200px; visibility:<?php
+<div id='test' class="<?php
+    if($user[0]["started"] == null) {
+        echo "d-none";
+    } else {
+        echo "";
+    }
+?> container rounded bg-white mb-5 w-100" style="min-height: 1200px; visibility:<?php
 if($test['state'] === 'disabled') {
     echo "hidden;";
 } else {
@@ -171,6 +197,14 @@ if($test['state'] === 'disabled') {
 
 <script type="text/javascript">
 
+    $(document).ready(function() {
+        const testTime = $('#testTime').text();
+        const original = $('#timeOrig').text();
+        if(testTime !== original) {
+            setInterval(updateCountdown,1000);
+        }
+    });
+
     let answersTest = [];
 
     function isEmpty(str) {
@@ -191,20 +225,15 @@ if($test['state'] === 'disabled') {
 
     function saveOptions(el){
         let id = el.id;
-        console.log(id);
         let i;
         let data = [];
         for(i =1; i <= 4; i++){
             let optionNumber = 'option'+i;
             let checkboxID= id+optionNumber+'Check';
-            console.log(checkboxID);
             let option = $('#'+checkboxID).is(":checked");
-            console.log(option);
             data[i - 1] = option;
         }
-        console.log(data);
         let myJSON = JSON.stringify(data);
-        console.log(myJSON);
         $('#optsR'+id).empty();
         $('#optsR'+id).text(myJSON);
     }
@@ -348,8 +377,8 @@ if($test['state'] === 'disabled') {
 
         countdownEl.innerHTML = (minutes) + ":" +(seconds);
         if(testSeconds == 0){
-            submitTest();
             countdownEl.innerHTML = "Koniec testu";
+            submitTest();
         }
         else{
             testSeconds--;

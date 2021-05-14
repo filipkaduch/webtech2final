@@ -51,7 +51,7 @@ if(isset($_SESSION['ucitel_id'])) {
 
             echo "<div class='col-4 p-4 bg-white border'><h3>Nazov: ".$t['name']."</h3><br><h4>Zaciatok: ".$t['startTime']."</h4><br>
             <h4>Trvanie: ".$t['time']."</h4><br><h4>Stav: ".$t['state']."</h4><br>
-            <h4>Token:</h4><small>".$t['token']."</small>
+            <h4>Token:</h4><small class='mb-4'>".$t['token']."</small>
             <button class='btn btn-warning btn-block' id='".$t['id']."' onclick='setActive(this.id)'>Aktivuj/Deaktivuj</button><br>
             <button class='btn btn-warning btn-block' id='".$t['id']."' onclick='deleteTest(this.id)'>Zmazat</button>
             <a class='btn btn-warning btn-block mt-4' href='trackTest.php?id=".$t['id']."' role='button'>Sledovat</a>
