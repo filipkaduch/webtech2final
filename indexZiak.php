@@ -52,12 +52,11 @@ if(isset($_SESSION['ziak_id'])) {
 
 <div class="container my-3">
     <div class="row">
-        <h1>Pohlad ziaka- Test</h1>
+        <h1>Pohlad žiaka- Test</h1>
     </div>
     <div class="container">
-        <div class="row justify-content-center d-inline-flex my-5">
-            <button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
-            <button type="button" class="btn btn-secondary mr-1" onclick="submitTest('createTest')">Odovzdat test</button>
+        <div class="justify-content-between d-flex my-5">
+<!--            <button type="button" class="btn btn-secondary mr-1" onclick="submitTest('createTest')">Odovzdat test</button>-->
             <button type="button" id='startBtn' class="<?php
             if($test['state'] === 'disabled') {
                 echo "d-none";
@@ -68,18 +67,19 @@ if(isset($_SESSION['ziak_id'])) {
                 if($user[0]["started"] != null) {
                     echo "disabled";
                 }
-            ?>>Spustit test</button>
+            ?>>Spustiť test</button>
             <br>
             <?php
             echo "<div id='testTime' style='display: none;'>".$timerTime."</div>";
             ?>
             <h4 id="countdown" class="ml-4 font-weight-bold"></h4>
+            <button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
         </div>
         <div class="row d-block my-5">
-            <h3>Nazov: <?php echo $test['name']?></h3>
+            <h3>Názov: <?php echo $test['name']?></h3>
             <h3>Stav: <?php echo $test['state']?></h3>
             <h3>Trvanie: <?php echo $test['time']?></h3>
-            <h3>Start: <?php echo $test['startTime']?></h3>
+            <h3>Začiatok: <?php echo $test['startTime']?></h3>
         </div>
     </div>
 </div>
@@ -115,7 +115,7 @@ if($test['state'] === 'disabled') {
         //CLASS VYSLEDOK POUZIVAM KVOLI ODOVZDANIU TESTU ABY SA ZOZBIERALI VSETKY AUTOMATICKY OPRAVOVANE OTAZKY
         foreach($questions as $q) {
             $cou = 1;
-            echo "<div class='row m-4 d-block p-2 bg-info rounded'><h4>".$tem." Nazov otazky: ".$q['name']."</h4><h4>Typ: ".$q['type']."</h4><h4>Zadanie: ".$q['text']."</h4></div>";
+            echo "<div class='row m-4 d-block p-2 bg-info rounded'><h4>".$tem.".</h4><h4>Typ otázky: ".$q['type']."</h4><h4>Zadanie: ".$q['text']."</h4></div>";
             if($q['type'] == 'paint') {
                 echo "<div class='row m-2 align-items-center justify-content-between d-inline-flex w-100'><button class='btn btn-primary m-3' id='bttnQ".$q['id']."' onclick='showCanvas(this)'>Nakreslit v editore</button><label class='label' for='fileQ".$q['id']."'>Nahrat obrazok</label><input type='file' class='form-control mr-4' style='width: 300px;' name='file".$q['id']."' id='fileQ".$q['id']."'><button class='btn btn-primary mr-5' id='confU".$q['id']."' onclick='saveFile(this)'>Odovzdat subor</button></div><div id='cnv".$q['id']."' class='cnv' style='height: 600px;'><div id='canvas".$q['id']."'></div><button class='btn btn-primary' id='confP".$q['id']."' onclick='saveCanvas(this)'>Potvrdit nakres</button></div>";
             } else if($q['type'] == 'pair') {
@@ -124,7 +124,7 @@ if($test['state'] === 'disabled') {
             } else if($q['type'] == 'options') {
                 $option = json_decode($q['content'], true);
                 echo "
-                    <h6 class='ml-4'>Oznacte spravne moznosti a ulozte odpoved. Ak sa rozhodnete oznacit ine moznosti, nezabudnite opat ulozit odpoved!</h6>
+                    <h6 class='ml-4'>Označte správne možnosti a uložte odpoveď. Ak sa rozhodnete označiť iné možnosti, nezabudnite opäť uložiť odpoveď!</h6>
                     <div class='row ml-4'>
                     <div class='form-check'>";
                 for($i =1; $i <=4; $i++){
@@ -142,7 +142,7 @@ if($test['state'] === 'disabled') {
 
             } else if($q['type'] == 'answer'){        
                 echo "
-                <h6 class='ml-4'>Napiste odpoved v pozadovanom tvare.</h6>
+                <h6 class='ml-4'>Napíšte odpoveď v požadovanom tvare.</h6>
                 <div class='vysledok'  style='display: none;' id='answR".$q['id']."'></div>
                 <div class='mb-3 ml-4'>
                     <input id='".$q['id']."' type='text' onblur='checkShort(this)' class=''>
@@ -153,6 +153,10 @@ if($test['state'] === 'disabled') {
         }
 
     ?>
+    <div class="d-flex justify-content-center mb-4">
+        <button type="button" class="btn btn-secondary mr-1" onclick="submitTest('createTest')">Odovzdat test</button>
+    </div>
+
 </div>
 <script type="text/javascript">
 
@@ -236,6 +240,7 @@ if($test['state'] === 'disabled') {
         let myJSON = JSON.stringify(data);
         $('#optsR'+id).empty();
         $('#optsR'+id).text(myJSON);
+        alert("Vaša odpoveď bola uložená!");
     }
 
     function saveFile(el) {
