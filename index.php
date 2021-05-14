@@ -22,6 +22,9 @@
     <div class="row">
         <button class="btn btn-block bg-info my-3" onclick="location.href='register.php'">Učiteľ - registrácia</button>
     </div>
+    <div class="row">
+        <button class="btn btn-block bg-info my-3" onclick="location.href='dokumentacia.php'">Učiteľ - registrácia</button>
+    </div>
 
 </div>
 

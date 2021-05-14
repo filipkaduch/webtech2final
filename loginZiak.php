@@ -16,6 +16,7 @@ if (isset($_POST['login'])) {
     $token = $_POST['token'];
     $firstname = $_POST['firstname'];
     $surname = $_POST['surname'];
+    $student_id = $_POST['student_id'];
     $query = $conn->prepare("SELECT * FROM tests WHERE token=:token");
     $query->bindParam("token", $token);
     $query->execute();
@@ -54,9 +55,9 @@ if (isset($_POST['login'])) {
             } else {
                 if ($token == $result['token']) {
 
-                    $sql = "INSERT INTO users (token, firstname, surname, test_id) VALUES (?,?,?,?)";
+                    $sql = "INSERT INTO users (token, firstname, surname, test_id,student_id) VALUES (?,?,?,?,?)";
                     $stm = $conn->prepare($sql);
-                    $stm->execute([$token, $firstname, $surname, $result['id']]);
+                    $stm->execute([$token, $firstname, $surname, $result['id'],$student_id]);
                     $ziak_id = $conn->lastInsertId();
                     $_SESSION['user_login'] = $_POST['firstname'];
                     $_SESSION['ziak_id'] = $ziak_id;
@@ -82,7 +83,11 @@ if (isset($_POST['login'])) {
             </div>
             <div class="form-element">
                 <label>Priezvisko:</label><br>
-                <input type="password" name="surname" pattern="[a-zA-Z0-9]+" required />
+                <input type="text" name="surname" pattern="[a-zA-Z0-9]+" required />
+            </div>
+            <div class="form-element">
+                <label>Študent ID:</label><br>
+                <input type="text" name="student_id" pattern="[0-9]+" required />
             </div>
             <br>
             <button class="btn btn-success" type="submit" name="login" value="login">Log In</button>
