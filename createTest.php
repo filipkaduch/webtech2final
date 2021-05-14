@@ -42,6 +42,7 @@ $questions = $controller->getTestQuestions($newId);
     <div class="row">
         <div class="row justify-content-center d-inline-flex my-5">
             <button type="button" class="btn btn-secondary mr-1" onclick="show('index')">Testy</button>
+            <button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
         </div>
     </div>
 </div>
@@ -290,6 +291,11 @@ $questions = $controller->getTestQuestions($newId);
 
 </html>
 <style>
+
+    body {
+        background-color: floralwhite;
+    }
+
     .control-bar {
         height: 300px;
         background-color: cornsilk;

@@ -33,7 +33,11 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
         <div class="row justify-content-center d-inline-flex my-5">
             <a class="btn btn-secondary mr-1" href="https://wt70.fei.stuba.sk/webtech-final/trackTest.php?id=<?php echo $_GET['testId']; ?>"
              role="button">Späť</a>
+            <button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
         </div>
+    </div>
+    <div class="container rounded bg-white my-3" style="border: 2px solid black;">
+        <div class="row p-2"><h4>Ziak: <?php echo $user[0]['firstname'];?></h4></div>
     </div>
     <div class="container rounded bg-white my-5 w-100" style="border: 2px solid black;">
         <?php
@@ -89,8 +93,15 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
     </div>
 </div>
 <script src="script/script.js"></script>
+
 </body>
 </html>
+
+<style type="text/css">
+    body {
+        background-color: floralwhite;
+    }
+</style>
 
 <script type="text/javascript">
 
