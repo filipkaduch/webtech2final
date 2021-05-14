@@ -61,9 +61,9 @@
             <p>
                 Informácie pre učiteľa:
                 Učiteľ môže nahliadnuť na priebeh testu kde sa zobrazia všetci študenti ktorí sa prihlásili s prístupovým
-                kódom daného testu a spustili ho.
-                Je zobrazená aj informácia či už študent test odovzdal.<br>
-                V prípade odovzdaného testu vie učiteľ zobraziť žiakove odpovede s tým že automaticky vyhodnotené otázky budú už obodované.
+                kódom daného testu a spustili ho.<br>
+                Je zobrazená aj informácia či už študent test odovzdal a či počas testu odišiel/odchádzal z tabu.<br>
+                Učiteľ vie zobraziť žiakove odpovede s tým že automaticky vyhodnotené otázky budú už obodované.
             </p>
             <br>
             <p>

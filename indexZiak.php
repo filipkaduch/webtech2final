@@ -512,4 +512,19 @@ if($test['state'] === 'disabled') {
         return false;
     }
 
+    window.onload = function() {
+        document.addEventListener("visibilitychange", () => {
+            let userId = $('#ziakId').text();
+            $.ajax({
+                type: "POST",
+                url: "catchCheaters.php",
+                data: {
+                    userId: userId,
+                }
+            }).done(function(o) {
+
+            });
+        });
+    };
+
 </script>

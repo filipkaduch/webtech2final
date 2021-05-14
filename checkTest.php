@@ -43,7 +43,6 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
     <div class="container rounded bg-white my-5 w-100" style="border: 2px solid black;">
         <?php
             $tem = 1;
-            //NAVRHUJEM PRICITAVAT BODY PRI KAZDEJ ODPOVEDI ALE AK JE TO PICOVINA PRI PAROVACICH OTAZKACH TAK MOZME TO ROBIT INAK
             $points = 0;
             $totalPoints = 0;
             foreach($questions as $question){
