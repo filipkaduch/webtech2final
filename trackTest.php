@@ -33,7 +33,7 @@ $users = $controller->getUsers($testId);
     </div>
     <div class="row">
         <div class="row justify-content-center d-inline-flex my-5">
-            <button type="button" class="btn btn-secondary mr-1" onclick="show('index')">Späť</button>
+            <button type="button" class="btn btn-secondary mr-1" onclick="show('indexUcitel')">Späť</button>
             <button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
         </div>
     </div>

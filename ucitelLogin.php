@@ -54,7 +54,7 @@ if (isset($_POST['login'])) {
                 if ($password ==$result['password']) {
                     $_SESSION['user_login'] = $_POST['username'];
                     $_SESSION['ucitel_id'] = $result['id'];
-                    header("location: https://wt70.fei.stuba.sk/webtech-final/index.php");
+                    header("location: https://wt70.fei.stuba.sk/webtech-final/indexUcitel.php");
                 } else {
                     echo "<div class=" . "'alert alert-danger'" . " role= alert" . ">Nesprávne meno alebo heslo!</div>";
                 }
@@ -79,7 +79,7 @@ if (isset($_POST['login'])) {
         <br>
         <button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
         <br>
-        <button class="btn btn-block bg-info my-3" onclick="location.href='indexLogin.php'">Späť na hlavnú stránku</button>
+        <button class="btn btn-block bg-info my-3" onclick="location.href='index.php'">Späť na hlavnú stránku</button>
 
     </div>
 </div>

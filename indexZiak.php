@@ -335,7 +335,6 @@ if($test['state'] === 'disabled') {
         });
     }
 
-    let startingMinutes = 10;
     const testTime = $('#testTime').text(); //started v users
     let testSeconds = testTime * 60;
 
@@ -349,7 +348,7 @@ if($test['state'] === 'disabled') {
 
         countdownEl.innerHTML = (minutes) + ":" +(seconds);
         if(testSeconds == 0){
-            submitTest()
+            submitTest();
             countdownEl.innerHTML = "Koniec testu";
         }
         else{
@@ -357,10 +356,19 @@ if($test['state'] === 'disabled') {
         }
     }
     function showTest() {
+        let userId = $('#ziakId').text();
         $('#test').toggleClass('d-none');
         $('#startBtn').prop('disabled', true);
 
-        //TUTO DOPLN TIMER KOD
+        $.ajax({
+            type: "POST",
+            url: "setStarted.php",
+            data: {
+                userId: userId,
+            }
+        }).done(function(o) {
+
+        });
         setInterval(updateCountdown,1000);
     }
 

@@ -19,7 +19,6 @@ if (isset($_POST['register'])) {
     $query = $conn->prepare("SELECT * FROM ucitel WHERE username=:username");
     $query->bindParam("username", $username, PDO::PARAM_STR);
     $query->execute();
-    var_dump($_POST);
 }
 
 ?>
@@ -81,7 +80,7 @@ if (isset($_POST['register'])) {
             <button class="btn btn-success" type="submit" name="register" value="register">Register</button>
         </form>
         <br>
-        <button class="btn btn-block bg-info my-3" onclick="location.href='indexLogin.php'">Späť na hlavnú stránku</button>
+        <button class="btn btn-block bg-info my-3" onclick="location.href='index.php'">Späť na hlavnú stránku</button>
     </div>
 
 </div>

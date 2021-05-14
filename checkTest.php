@@ -97,7 +97,7 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
 </body>
 </html>
 
-<style type="text/css">
+<style>
     body {
         background-color: floralwhite;
     }

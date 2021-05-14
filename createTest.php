@@ -41,7 +41,7 @@ $questions = $controller->getTestQuestions($newId);
     <h1>Pohlad ucitela - vytvorenie testu</h1>
     <div class="row">
         <div class="row justify-content-center d-inline-flex my-5">
-            <button type="button" class="btn btn-secondary mr-1" onclick="show('index')">Testy</button>
+            <button type="button" class="btn btn-secondary mr-1" onclick="show('indexUcitel')">Testy</button>
             <button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
         </div>
     </div>
@@ -233,9 +233,6 @@ $questions = $controller->getTestQuestions($newId);
                 </div>
                 <div class="form-group">
                     Zadanie: <input type="textarea" class="form-control" name="questionText" id='questionText'>
-                </div>
-                <div class="form-group">
-                    Pridat obrazok: <input type="file" class="form-control" id='contents' name="contents">
                 </div>
             </div>
             <div class="modal-footer">
@@ -487,7 +484,7 @@ $questions = $controller->getTestQuestions($newId);
             success: function (obj, textstatus) {
                 if( !('error' in obj) ) {
                     console.log(obj);
-                    window.location = "https://wt70.fei.stuba.sk/webtech-final/";
+                    window.location = "https://wt70.fei.stuba.sk/webtech-final/indexUcitel.php";
                 }
                 else {
                     console.log(obj.error);

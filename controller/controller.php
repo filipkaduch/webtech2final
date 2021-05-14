@@ -138,6 +138,22 @@ class Controller {
         $stmt->execute();
     }
 
+    public function setStarted($userId, $currentTime) {
+        $stmt = $this->conn->prepare('UPDATE users SET started=? WHERE id=?');
+        $stmt->bindValue(1, $currentTime);
+        $stmt->bindValue(2, $userId);
+        $stmt->execute();
+        return $this->conn->lastInsertId();
+    }
+
+    public function setFinished($userId, $currentTime) {
+        $stmt = $this->conn->prepare('UPDATE users SET finished=? WHERE id=?');
+        $stmt->bindValue(1, $currentTime);
+        $stmt->bindValue(2, $userId);
+        $stmt->execute();
+        return $this->conn->lastInsertId();
+    }
+
     public function submitAnswers($userId, $testId) {
         $stmt = $this->conn->prepare('UPDATE answers SET handed=1 WHERE user_id=? and test_id=?');
         $stmt->bindValue(1, $userId);

@@ -91,7 +91,7 @@ if (isset($_POST['login'])) {
         <br>
         <button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
         <br>
-        <button class="btn btn-block bg-info my-3" onclick="location.href='indexLogin.php'">Späť na hlavnú stránku</button>
+        <button class="btn btn-block bg-info my-3" onclick="location.href='index.php'">Späť na hlavnú stránku</button>
 
     </div>
 </div>
