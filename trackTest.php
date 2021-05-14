@@ -10,6 +10,8 @@ require_once "controller/controller.php";
 $controller = new Controller();
 
 $test = $controller->getTest($testId);
+$users = $controller->getUsers($testId);
+// var_dump($users);
 
 ?>
 
@@ -38,20 +40,31 @@ $test = $controller->getTest($testId);
 </div>
 
 <div class="container border rounded bg-info mb-5 w-100" style="min-height: 200px;">
-    <h2 class="text-center mt-2"><?php echo $test[0]['name']?></h2>
+    <h2 class="text-center mt-2"><?php echo $test['name']?></h2>
     <div class="d-none" id="testId"><?php echo $testId?></div>
-    <table class="table table-light mt-3">
+    <table class="table table-light table-striped mt-3">
         <thead class="thead-dark">
             <th>Student</th>
             <th>Status</th>
             <th>Akcia</th>
         </thead>
         <tbody>
-            <tr>
-                <td>Meno studenta</td>
-                <td>robi/dokoncil</td>
-                <td><a class='btn btn-warning' href='checkTest.php?userId=<?php echo 1?>&testId=<?php echo $testId?>' role='button'>Pozriet test</a></td>
-            </tr>
+        <?php
+            foreach($users as $user){
+                if($user['finished'] == NULL){
+                    $status = 'robí';
+                } else $status = 'dokončil';
+                if(!$user['surname']){
+                    $surname = "";
+                } else $surname = $user['surname'];
+                echo "
+                <tr>
+                    <td>".$user['firstname']." ".$surname."</td>
+                    <td>".$status."</td>
+                    <td><a class='btn btn-warning' href='checkTest.php?userId=".$user['id']."&testId=".$testId."' role='button'>Pozriet test</a></td>
+                </tr>";
+            }
+        ?>
         </tbody>
     </table>
 </div>
