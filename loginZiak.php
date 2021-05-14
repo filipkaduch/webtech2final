@@ -51,7 +51,7 @@ if (isset($_POST['login'])) {
         if (isset($_POST['login'])) {
             if (!$result) {
 
-                echo "<div class=" . "'alert alert-danger'" . " role= alert" . ">Nesprávne meno alebo hesloo!</div>";
+                echo "<div class=" . "'alert alert-danger'" . " role= alert" . ">Nespravny kod testu!</div>";
             } else {
                 if ($token == $result['token']) {
 
@@ -65,7 +65,7 @@ if (isset($_POST['login'])) {
                     header("location: https://wt70.fei.stuba.sk/webtech-final/indexZiak.php");
 
                 } else {
-                    echo "<div class=" . "'alert alert-danger'" . " role= alert" . ">Nesprávne meno alebo heslo!</div>";
+                    echo "<div class=" . "'alert alert-danger'" . " role= alert" . ">Nespravny kod testu!</div>";
                 }
             }
         }
