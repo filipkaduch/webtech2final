@@ -8,6 +8,7 @@ $user = null;
 if(isset($_GET['testId']) && isset($_GET['userId'])) {
     $answers = $controller->getStudentAnswers($_GET['testId'], $_GET['userId']);
     $user = $controller->getStudent($_GET['userId']);
+    $questions = $controller->getTestQuestions($_GET['testId']);
 }
 // var_dump($answers);
 
@@ -30,7 +31,7 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
         <h1>Pohlad ucitela - Test ziaka</h1>
     </div>
     <div class="row">
-        <div class="row justify-content-center d-inline-flex my-5">
+        <div class="row justify-content-center d-inline-flex my-5 ml-1">
             <a class="btn btn-secondary mr-1" href="https://wt70.fei.stuba.sk/webtech-final/trackTest.php?id=<?php echo $_GET['testId']; ?>"
              role="button">Späť</a>
             <button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
@@ -42,30 +43,39 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
     <div class="container rounded bg-white my-5 w-100" style="border: 2px solid black;">
         <?php
             $tem = 1;
-            //NAVRHUJEM PRICITAVAT BODY PRI KAZDEJ ODPOVEDI ALE AK JE TO PICOVINA PRI PAROVACICH OTAZKACH TAK MOZME TO ROBIT INAK
             $points = 0;
             $totalPoints = 0;
+            foreach($questions as $question){
+                if($question['type'] == 'pair'){
+                    $json = json_decode($question['content']);
+                    $totalPoints += sizeof($json);
+                } else if($question['type'] == 'answer'){
+                    $totalPoints += 1;
+                } else if($question['type'] == 'options'){
+                    $totalPoints += 4;
+                }
+            }
             foreach($answers as $an) {
                 $q = $controller->getQuestionById($an['question_id']);
-                echo "<div class='row m-4 d-block p-2 bg-info rounded'><h4>".$tem." Nazov otazky: ".$q['name']."</h4><h4>Typ: ".$q['type']."</h4><h4>Zadanie: ".$q['text']."</h4></div>";
+                echo "<div class='row m-4 d-block p-2 bg-info rounded'><h4>".$tem.". Nazov otazky: ".$q['name']."</h4>
+                      <h4>Typ: ".$q['type']."</h4><h4>Zadanie: ".$q['text']."</h4></div>";
                 if($q['type'] == 'pair') {
                     $json = json_decode($an['content']);
                     echo "<div class='row m-4'><h4>Vysledok (vyhodnotene automaticky): ".$json->result."</h4></div>";
+                    $points += substr($json->result, 0, -2);
                 } else if($q['type'] == 'paint') {
                     $json = json_decode($an['content']);
                     echo "<img style='height:400px; margin-left:50px;' src='../files/".$json->path."' alt='img' />";
                 } else if($q['type'] == 'answer') {
-                    $totalPoints += 1;
                     $correctAnswer = $q['content'];
                     $studentAnswer = json_decode($an['content'])->result;
                     if($correctAnswer == $studentAnswer){
                         $points += 1;
-                        echo "<div class='row m-4'><h5 class='text-success'>1/1</h5></div>";
-                    } else echo "<div class='row m-4'><h5 class='text-danger'>0/1</h5></div>";
-                    echo "<div class='row m-4'><h5>Odpoved ziaka: ".$studentAnswer."</h5></div>";
-                    echo "<div class='row m-4'><h6>Spravna odpoved: ".$correctAnswer."</h6></div>";
+                        echo "<div class='row ml-4 mb-2'><h5 class='text-success'>1/1</h5></div>";
+                    } else echo "<div class='row ml-4 mb-2'><h5 class='text-danger'>0/1</h5></div>";
+                    echo "<div class='row ml-4'><h5>Odpoved ziaka: ".$studentAnswer."</h5></div>";
+                    echo "<div class='row ml-4'><h6>Spravna odpoved: ".$correctAnswer."</h6></div>";
                 } else if($q['type'] == 'options'){
-                    $totalPoints += 4;
                     $studentAnswer = json_decode($an['content'])->result;
                     $correctAnswer = json_decode($q['content']);
                     $studentAnswer = str_replace(array( '[', ']' ), '', $studentAnswer);
@@ -88,6 +98,12 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
                 }
 
                 $tem += 1;
+            }
+            if(!empty($answers)){
+                echo "
+                <div class='m-4 d-flex justify-content-end'>
+                    <h4>Celkový počet bodov (z automaticky vyhodnotených otázok): ".$points."/".$totalPoints."</h4>
+                </div>";
             }
         ?>
     </div>

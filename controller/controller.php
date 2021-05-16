@@ -61,6 +61,24 @@ class Controller {
         return $stmt3->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function catchCheaters($userId) {
+        $stm = $this->conn->prepare("SELECT started, finished FROM users WHERE id=? ");
+        $stm->bindValue(1, $userId);
+        $stm->execute();
+        $handed = $stm->fetchAll(PDO::FETCH_ASSOC);
+        if($handed[0]['started'] != NULL && $handed[0]['finished'] == NULL){
+            $stmt3 = $this->conn->prepare("UPDATE users SET left_tab = 1  WHERE id=?");
+            $stmt3->bindValue(1, $userId);
+            $stmt3->execute();
+        }
+//        else{
+//            $stmt3 = $this->conn->prepare("SELECT left_id FROM users WHERE id=? ");
+//            $stmt3->bindValue(1, $userId);
+//            $stmt3->execute();
+//        }
+//        return $stmt3->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getStudent($userId) {
         $stmt3 = $this->conn->prepare("SELECT * FROM users WHERE id=? ");
         $stmt3->bindValue(1, $userId);

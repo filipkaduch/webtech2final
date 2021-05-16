@@ -33,8 +33,8 @@ if(isset($_SESSION['ucitel_id'])) {
     <div class="row">
         <h1>Pohlad ucitela- Testy</h1>
     </div>
-    <div class="row">
-        <div class="row justify-content-center d-inline-flex my-5">
+    <div class="">
+        <div class="justify-content-between d-flex my-5">
             <button type="button" class="btn btn-secondary mr-1" onclick="show('createTest')">Vytvorit novy test</button>
             <button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
         </div>

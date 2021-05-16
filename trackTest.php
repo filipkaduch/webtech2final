@@ -46,21 +46,26 @@ $users = $controller->getUsers($testId);
         <thead class="thead-dark">
             <th>Student</th>
             <th>Status</th>
+            <th>Odišiel</th>
             <th>Akcia</th>
         </thead>
         <tbody>
         <?php
             foreach($users as $user){
                 if($user['finished'] == NULL){
-                    $status = 'robí';
-                } else $status = 'dokončil';
+                    $status = 'odovzdal';
+                } else $status = 'neodovzdal';
                 if(!$user['surname']){
                     $surname = "";
                 } else $surname = $user['surname'];
+                if($user['left_tab'] == 1){
+                    $left = 'áno';
+                } else $left = 'nie';
                 echo "
                 <tr>
                     <td>".$user['firstname']." ".$surname."</td>
                     <td>".$status."</td>
+                    <td>".$left."</td>
                     <td><a class='btn btn-warning' href='checkTest.php?userId=".$user['id']."&testId=".$testId."' role='button'>Pozriet test</a></td>
                 </tr>";
             }

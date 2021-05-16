@@ -39,8 +39,8 @@ $questions = $controller->getTestQuestions($newId);
 
 <div class="container my-3">
     <h1>Pohlad ucitela - vytvorenie testu</h1>
-    <div class="row">
-        <div class="row justify-content-center d-inline-flex my-5">
+    <div class="">
+        <div class="justify-content-between d-flex my-5">
             <button type="button" class="btn btn-secondary mr-1" onclick="show('indexUcitel')">Testy</button>
             <button class="btn btn-danger" onclick="location.href='logout.php'">Log Out</button>
         </div>
@@ -117,25 +117,6 @@ $questions = $controller->getTestQuestions($newId);
                 <div class="form-group">
                     Spravna odpoved: <input type="text" class="form-control" id="answer" name="answer">
                 </div>
-                <button class="btn btn-primary" type="button" name="submit" onclick="addAnswer()">Pridat odpoved +</button>
-                <!-- <div id="container"></div> -->
-                <?php
-                // $answers = $controller->getAnswers($questionID);
-                ?>
-                <div class="mt-2">
-                    <table class="">
-                        <thead class="">
-                            <th>Spravne odpovede:</th>
-                        </thead>
-                        <tbody id="tableAnswers">
-                        <?php
-                        // foreach($answers as $row) {
-                        //     echo "<tr><th>".$row["answer"]."</th></tr>";
-                        // }
-                        ?>
-                        </tbody>
-                    </table>
-                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" type="button" name="submit" onclick="addAnswerQuestion()">Ulozit otazku</button>
@@ -159,7 +140,7 @@ $questions = $controller->getTestQuestions($newId);
                 <div class="form-group">
                     Zadanie: <input type="textarea" class="form-control" name="questionText4" id='questionText4'>
                 </div>
-                <h5>Moznosti</h5>
+                <h6>Moznosti:</h6>
                 <div class="form-group row">
                     <label for="option1" class="col-sm-2 col-form-label">a)</label>
                     <div class="col-sm-10">
@@ -340,29 +321,6 @@ $questions = $controller->getTestQuestions($newId);
                     for(let i = 0; i < obj.length; i++) {
                         $('#tableBody').append('<tr><th>' + obj[i].id + '</th><th>'+obj[i].name+ '</th><th>' + obj[i].type + '</th><th><button class=\'btn btn-warning\' onclick=\'deleteQuestion('+obj[i].id+')\'>Zmazat</button>');
                     }
-                }
-                else {
-                    console.log(obj.error);
-                }
-            }
-        });
-    }
-
-    //pridat odpoved - nefunguje tak som jebal na to
-    function addAnswer() {
-        let id = $('#testId').text();
-        let answer = $('#answer').val();
-        jQuery.ajax({
-            type: "POST",
-            url: 'saveAnswer.php',
-            dataType: 'json',
-            data: {testId: id, content: answer},
-
-            success: function (obj, textstatus) {
-                if( !('error' in obj) ) {
-                    console.log(obj);
-                    $('#tableAnswers').text('');
-                    $('#tableAnswers').append('<tr><th>' + obj[i].answer + '</th></tr>');
                 }
                 else {
                     console.log(obj.error);
