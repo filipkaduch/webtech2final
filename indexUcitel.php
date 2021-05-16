@@ -54,7 +54,9 @@ if(isset($_SESSION['ucitel_id'])) {
             <h4>Token:</h4><small class='mb-4'>".$t['token']."</small>
             <button class='btn btn-warning btn-block' id='".$t['id']."' onclick='setActive(this.id)'>Aktivuj/Deaktivuj</button><br>
             <button class='btn btn-warning btn-block' id='".$t['id']."' onclick='deleteTest(this.id)'>Zmazat</button>
-            <a class='btn btn-warning btn-block mt-4' href='trackTest.php?id=".$t['id']."' role='button'>Sledovat</a>
+            <a class='btn btn-warning btn-block mt-4' href='trackTest.php?id=".$t['id']."' role='button'>Sledovat</a><br>
+            <button class='btn btn-warning btn-block' label='Export Csv' onclick='exportTest(".$t['id'].")' >Export Csv</button>
+            
             </div>";
             if($count % 3 == 2) {
                 echo "</div>";
@@ -153,6 +155,11 @@ if(isset($_SESSION['ucitel_id'])) {
                 }
             }
         });
+    }
+
+    function exportTest(id) {
+        console.log(window.location.href.split('/').slice(0,-1).join('/')+'/exportTest.php?id=' + id);
+        window.location.href = window.location.href.split('/').slice(0,-1).join('/')+'/exportTest.php?id=' + id;
     }
 
 </script>

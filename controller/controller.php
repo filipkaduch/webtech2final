@@ -254,4 +254,54 @@ class Controller {
         $stmt7->execute();
     }
 
+    public function exportTest($id) {
+
+        $stmt8 = $this->conn->prepare("SELECT u.id, u.firstname, u.surname, a.question_id, a.content, a.handed, u.started, u.finished, q.name, q.type, q.content, q.text FROM answers as a INNER JOIN users as u on a.user_id = u.id LEFT JOIN questions as q on a.question_id = q.id WHERE a.test_id=? ORDER BY user_id, question_id");
+        $stmt8->bindValue(1, $id);
+        $stmt8->execute();
+        $rowsAnswers = $stmt8->fetchAll(PDO::FETCH_ASSOC);
+        $rowsAnswersEndoded = json_encode($rowsAnswers, JSON_UNESCAPED_SLASHES);
+
+        //$dir = "/home/xkostalm/public_html/webtech-final/files/";
+        $filename = 'test_'.$id.'_csv_export.csv';
+
+        header('Content-type: application/csv');
+        header('Content-Disposition: attachment; filename=' . $filename);
+        header("Content-Transfer-Encoding: UTF-8");
+        header('Set-Cookie: fileLoading=true');
+
+        //convert json to csv
+        $fp = fopen('php://output', 'wb');
+        $jsonDecoded = json_decode($rowsAnswersEndoded, true); // add true, will handle as associative array
+        //$fp = fopen($dir.$filename, 'w') or die('Can\'t create .csv file, try again later.');
+
+        $headers = ["Student Id", "Student First Name", "Student Last Name", "Question Id", "Answer content", "Answer submitted?", "User started exam", "User finished exam",  "Question Name", "Question Type", "Question Content", "Question text"];
+        fputcsv($fp, $headers);
+
+        if (is_array($jsonDecoded)) {
+            foreach ($jsonDecoded as $line) {
+                foreach ($line as $key => $value) {
+                    if (is_array($value)) {
+                        $line[$key] = $value[0];
+                    }
+                }
+                if (is_array($line)) {
+                    fputcsv($fp, $line);
+                }
+            }
+        }
+
+        if (fclose($fp)){
+            // go back to tests page after 2 sec (when file is safely downloaded)
+            sleep(2);
+            $fullUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+            $backToUrl = explode('/', $fullUrl);
+            array_pop($backToUrl);
+            $backToUrl = implode('/', $backToUrl) . '/indexUcitel.php';
+        }
+        else{
+            echo 'Failed miserably for some reason';
+        }
+
+    }
 }
