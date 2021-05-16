@@ -38,7 +38,7 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
         </div>
     </div>
     <div class="container rounded bg-white my-3" style="border: 2px solid black;">
-        <div class="row p-2"><h4>Ziak: <?php echo $user[0]['firstname'];?></h4></div>
+        <div class="row p-2"><h4>Ziak: <?php echo $user[0]['firstname']." ".$user[0]['surname']?></h4></div>
     </div>
     <div class="container rounded bg-white my-5 w-100" style="border: 2px solid black;">
         <?php
@@ -66,6 +66,7 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
                 } else if($q['type'] == 'paint') {
                     $json = json_decode($an['content']);
                     echo "<img style='height:400px; margin-left:50px;' src='../files/".$json->path."' alt='img' />";
+                    echo "<div class='form-group m-4 justify-space-between'><label for='paint'".$q['id'].">Zadajte body pre otazku: </label><input type='text' name='paint".$q['id']."' id='paint'".$q['id']."><button class='btn btn-primary ml-4' id='painb'".$q['id']." onclick='countOpen(this)'>Potvrdit body</button></div>";
                 } else if($q['type'] == 'answer') {
                     $correctAnswer = $q['content'];
                     $studentAnswer = json_decode($an['content'])->result;
@@ -75,6 +76,7 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
                     } else echo "<div class='row ml-4 mb-2'><h5 class='text-danger'>0/1</h5></div>";
                     echo "<div class='row ml-4'><h5>Odpoved ziaka: ".$studentAnswer."</h5></div>";
                     echo "<div class='row ml-4'><h6>Spravna odpoved: ".$correctAnswer."</h6></div>";
+                    echo "<div class='form-group m-4 justify-space-between'><label for='openq'".$q['id'].">Zadajte body pre otazku: </label><input type='text' name='openq".$q['id']."' id='openQ'".$q['id']."><button class='btn btn-primary ml-4' id='openb'".$q['id']." onclick='countOpenAnswer(this)'>Potvrdit body</button></div>";
                 } else if($q['type'] == 'options'){
                     $studentAnswer = json_decode($an['content'])->result;
                     $correctAnswer = json_decode($q['content']);
@@ -106,6 +108,9 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
                 </div>";
             }
         ?>
+        <div class="m-4 d-flex justify-content-end">
+            <h4 id="sumOpen">Celkovy pocet bodov za otvorene otazky: </h4><div class="ml-4" id="sumOpenPoints"></div>
+        </div>
     </div>
 </div>
 <script src="script/script.js"></script>
@@ -117,8 +122,29 @@ if(isset($_GET['testId']) && isset($_GET['userId'])) {
     body {
         background-color: floralwhite;
     }
+
+    #sumOpenPoints {
+        font-size: 25px;
+    }
 </style>
 
 <script type="text/javascript">
+    let sumPoints = 0;
+    function countOpen(el) {
+        let id = el.id;
+        let lastChar = id.substring(5, id.length);
+        let points = parseInt($('#paint'+lastChar).val());
+        $('#painb'+lastChar).prop('disabled', true);
+        sumPoints += points;
+        $('#sumOpenPoints').text(sumPoints.toString());
+    }
 
+    function countOpenAnswer(el) {
+        let id = el.id;
+        let lastChar = id.substring(5, id.length);
+        let points = parseInt($('#openQ'+lastChar).val());
+        $('#openb'+lastChar).prop('disabled', true);
+        sumPoints += points;
+        $('#sumOpenPoints').text(sumPoints.toString());
+    }
 </script>

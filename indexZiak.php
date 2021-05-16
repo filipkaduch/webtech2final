@@ -22,6 +22,7 @@ if(isset($_SESSION['ziak_id'])) {
         $dt2 = $date->format("Y-m-d H:i:s");
         $timeLeft = $dateTest->diff($date);
         $timerTime = $timerTime - $timeLeft->i;
+        $timerTime -= 1;
         if($timerTime < 0) {
             $test['state'] = 'disabled';
         }

@@ -53,8 +53,8 @@ $users = $controller->getUsers($testId);
         <?php
             foreach($users as $user){
                 if($user['finished'] == NULL){
-                    $status = 'odovzdal';
-                } else $status = 'neodovzdal';
+                    $status = 'neodovzdal';
+                } else $status = 'odovzdal';
                 if(!$user['surname']){
                     $surname = "";
                 } else $surname = $user['surname'];

@@ -54,8 +54,8 @@
             <p>
                 Otázky s otvorenou odpoveďou a možnosťami:<br>
                 Učiteľ - Zadáva nazov a zadanie otázky a 4 možnosti z ktorých môže označiť za správne ľubovolný počet.<br>
-                Vyhodnotené sú nasledovne: 1 bod za správne a -1 bod za nesprávne označenú(neoznačenú) možnosť.<br>
-                Žiak - Zobrazené je zadanie otázky s inštrukciami k jej vyplneniu, odpoveď je zaznamenaná pri odovzdaní testu
+                Vyhodnotené sú nasledovne: 1 bod za správne a -1 bod za nesprávne označenú(neoznačenú) možnosť. Má možnosť dodatočne prebodovať otázku<br>
+                Žiak - Zobrazené je zadanie otázky s inštrukciami k jej vyplneniu, odpoveď je zaznamenaná pri odovzdaní testu.
             </p>
             <br>
             <p>
@@ -68,10 +68,15 @@
             <br>
             <p>
                 Kresliace a párovacie otázky:
+                Učiteľ môže zadefinovať zadanie pre kresliacu otázku na ktorú následne študent
+                odpovedá pomocou nahratia PNG obrázku alebo otvorenia kresliaceho editoru. Tieto otázky sú dohodnocované po odovzdaní
+                testu a odpovede musia byť v priebehu testu potvrdené študentom pre ušetrenie priestoru na upload týchto súborov.
             </p>
             <br>
             <p>
                 Zadefinovanie viacerých testov:
+                Učiteľ môže zadefinovať viacero testov naraz a je mu poskytnutý základný GUI pre prácu s testami. Môže ich mazať, sledovať
+                , exportovať do PDF alebo aktivovať a deaktivovať.
             </p>
             <br>
             <p>
@@ -83,16 +88,19 @@
             <br>
             <p>
                 Nefunkčné/Nevypracované požiadavky :
-                Matematické výrazy, export pdf, export csv, docker
+                Matematické výrazy, export pdf, docker
             </p>
             <h3>Rozdelenie úloh </h3>
             <p>
                 Košťál:
                 Matematické výrazy, export pdf, export csv
+                <br>
                 Košík:
                 Otázky s otvorenou odpoveďou a možnosťami, informácie pre učiteľa
+                <br>
                 Kadúch:
                 Kresliace a párovacie otázky, zadefinovanie viacerých testov
+                <br>
                 Arvaj:
                 Prihlasovanie a registrácia, ukončenie testu, docker
                 Finalizácia projektu bola robená spoločne.
